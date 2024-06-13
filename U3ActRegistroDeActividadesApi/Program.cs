@@ -10,13 +10,23 @@ using U3ActRegistroDeActividadesApi.Models.Security;
 using U3ActRegistroDeActividadesApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region Conexion a la base de datos
+var dbConnectionString = builder.Configuration.GetConnectionString("DbConnectionString");
+builder.Services.AddDbContext<ItesrcneActividadesContext>(options =>
+{
+    options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString));
+});
+#endregion
 #region Services
 builder.Services.AddControllers().AddJsonOptions(option =>
 {
     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
+
 builder.Services.AddCors();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthorization();
 #region Agregar Swagger con JWT
 builder.Services.AddSwaggerGen(c =>
 {
@@ -26,7 +36,6 @@ builder.Services.AddSwaggerGen(c =>
         Description = "JWT Authorization header using the Bearer scheme",
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer"
-
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -44,58 +53,40 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 #endregion
+
 #region Autenticacion JWT
 var jwtoken = builder.Configuration.GetSection("JWT").Get<JWT>();
 if (jwtoken != null)
 {
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer
-    (
-        jwt =>
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwt =>
+    {
+        jwt.TokenValidationParameters = new TokenValidationParameters
         {
-            jwt.TokenValidationParameters = new()
-            {
-                ValidIssuer = jwtoken.Issuer,
-                ValidAudience = jwtoken.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtoken.Key ?? "")),
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true
-            };
-
-            jwt.Events = new JwtBearerEvents
-            {
-                OnAuthenticationFailed = context =>
-                {
-                    Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-                    return Task.CompletedTask;
-                },
-                OnTokenValidated = context =>
-                {
-                    Console.WriteLine($"Token validated: {context.SecurityToken}");
-                    return Task.CompletedTask;
-                }
-            };
-        }
-    );
-};
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = false,
+            ValidIssuer = jwtoken.Issuer,
+            ValidAudience = jwtoken.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtoken.Key))
+        };
+    });
+}
 #endregion
+
 #region Singleton
 builder.Services.AddSingleton<JWTHelper>();
 builder.Services.AddSingleton<Encriptacion>();
 #endregion
+
 #region Transient`s
 builder.Services.AddTransient<DepartamentosRepository>();
 builder.Services.AddTransient<ActividadesRepository>();
 #endregion
 #endregion
-#region Conexion a la base de datos
-var Db = builder.Configuration.GetConnectionString("DbConnectionString");
-builder.Services.AddDbContext<ItesrcneActividadesContext>(x =>
-{
-    x.UseMySql(Db, ServerVersion.AutoDetect(Db));
-});
-#endregion
+
 var app = builder.Build();
+
 #region Uso de Swagger
 if (app.Environment.IsDevelopment())
 {
@@ -103,14 +94,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 #endregion
+
+app.UseCors(x => x
+.AllowAnyHeader()
+.AllowAnyMethod()
+.AllowAnyOrigin());
+
 #region Configuracion General de app
-app.UseCors(
-    x => x
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowAnyOrigin()
-    );
-app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRouting();

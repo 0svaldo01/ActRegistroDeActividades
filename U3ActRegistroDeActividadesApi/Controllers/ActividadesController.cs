@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using U3ActRegistroDeActividadesApi.Models.DTOs;
 using U3ActRegistroDeActividadesApi.Models.Entities;
 using U3ActRegistroDeActividadesApi.Models.Validators;
@@ -8,7 +9,7 @@ namespace U3ActRegistroDeActividadesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin,Depto")]
+
     public class ActividadesController(ActividadesRepository Repositorio) : ControllerBase
     {
         #region CRUD
@@ -47,6 +48,7 @@ namespace U3ActRegistroDeActividadesApi.Controllers
         }
         #endregion
         #region Read
+
         [HttpGet("/")]
         public IActionResult GetActividades()
         {
@@ -67,7 +69,7 @@ namespace U3ActRegistroDeActividadesApi.Controllers
             }
             return NotFound("No hay actividades");
         }
-
+        [Authorize(Roles = "Administrador,Departamento")]
         [HttpGet("/{id:int}")]
         public IActionResult GetActividad(int id)
         {

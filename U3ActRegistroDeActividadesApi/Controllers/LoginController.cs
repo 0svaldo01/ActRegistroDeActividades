@@ -9,17 +9,17 @@ namespace U3ActRegistroDeActividadesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController(DepartamentosRepository Repositorio, IConfiguration config) : ControllerBase
+    public class LoginController(DepartamentosRepository repositorio, IConfiguration config) : ControllerBase
     {
         [HttpPost]
-        public IActionResult Login(LoginDTO dto)
+        public IActionResult Login([FromBody] LoginDTO dto)
         {
             LoginDTOValidator validador = new();
             var result = validador.Validate(dto);
             if (result.IsValid)
             {
                 dto.Password = Encriptacion.EncriptarSHA512(dto.Password);
-                var usuario = Repositorio.GetAll()
+                var usuario = repositorio.GetAll()
                     .FirstOrDefault(x => x.Username == dto.Username && x.Password == dto.Password);
                 if (usuario != null)
                 {
