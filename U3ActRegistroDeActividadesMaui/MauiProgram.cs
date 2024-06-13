@@ -15,8 +15,8 @@ namespace U3ActRegistroDeActividadesMaui
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            //HttpClient client = new HttpClient() { BaseAddress = new Uri("https://wichinsapi.websitos256.com/") };
-            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://doubledapi.labsystec.net/") };
+            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://departamentoseq1.websitos256.com/") };
+ 
 
             builder.Services.AddSingleton(client);
 #if DEBUG

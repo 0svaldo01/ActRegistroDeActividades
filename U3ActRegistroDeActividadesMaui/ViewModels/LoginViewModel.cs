@@ -21,16 +21,26 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         [RelayCommand]
         void IniciarSesion()
         {
-            //TODO: Validar
             var cons = LoginService.Login(Username, Password);
-            if (cons)
+            if(!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password))
             {
-                App.Current.MainPage = new AppShell();
+                if (cons)
+                {
+                    App.Current.MainPage = new AppShell();
+                    Username = "";
+                    Password = "";
+                    Error = "";
+                }
+                else
+                {
+                    Error = "Usuario o contraseña incorrectos";
+                }
             }
             else
             {
-                Error = "Usuario o contra incorrectos";
+                Error = "Por favor llene los campos";
             }
+           
         }
     }
 }
