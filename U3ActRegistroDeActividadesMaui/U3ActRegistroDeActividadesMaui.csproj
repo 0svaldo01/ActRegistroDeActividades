@@ -97,13 +97,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\AgregarDepView.xaml">
+	  <MauiXaml Update="Views\Departamentos\AgregarDepView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\AgregarView.xaml">
+	  <MauiXaml Update="Views\Actividades\AgregarView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\EditarView.xaml">
+	  <MauiXaml Update="Views\Actividades\EditarView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ListaView.xaml">
@@ -115,7 +115,7 @@
 	  <MauiXaml Update="Views\Splashpage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\VerActividad.xaml">
+	  <MauiXaml Update="Views\Actividades\VerActividad.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
