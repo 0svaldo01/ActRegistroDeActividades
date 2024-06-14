@@ -23,6 +23,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
 
         public event Action? DatosActualizadosAct;
 
+        #region Read
         public async Task GetActividades()
         {
             try
@@ -113,7 +114,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
             return null;
         }
 
-
+        
         public async Task<ActividadDTO?> Get(ActividadDTO dto)
         {
             try
@@ -132,6 +133,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
             }
             return null;
         }
+        #endregion
+        #region Create
         public async Task Insert(ActividadDTO dto)
         {
             try
@@ -144,6 +147,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
             }
         }
+        #endregion
+        #region Update
         public async Task Update(ActividadDTO dto)
         {
             try
@@ -156,6 +161,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
             }
         }
+        #endregion
+        #region Delete
         public async Task Delete(ActividadDTO dto)
         {
             try
@@ -168,5 +175,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
             }
         }
+        #endregion
     }
 }

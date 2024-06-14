@@ -16,7 +16,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
 
         public event Action? DatosActualizadosDep;
 
-
+        #region Read
         public async Task GetDepartamentos()
         {
             try
@@ -110,6 +110,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
             }
             return null;
         }
+        #endregion
+        #region Create
         public async Task Insert(DepartamentoDTO dto)
         {
             try
@@ -122,6 +124,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
             }
         }
+        #endregion
+        #region Update
         public async Task Update(DepartamentoDTO dto)
         {
             try
@@ -134,6 +138,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
             }
         }
+        #endregion
+        #region Delete
         public async Task Delete(DepartamentoDTO dto)
         {
             try
@@ -146,5 +152,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
             }
         }
+        #endregion
     }
 }

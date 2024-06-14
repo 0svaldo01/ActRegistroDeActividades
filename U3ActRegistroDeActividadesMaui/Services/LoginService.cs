@@ -18,7 +18,11 @@ namespace U3ActRegistroDeActividadesMaui.Services
         }
         public bool Login(string username, string password)
         {
-            var content = new StringContent(JsonSerializer.Serialize(new LoginDTO() { Username = username, Password = password}), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonSerializer.Serialize(new LoginDTO() 
+            {
+                Username = username,
+                Password = password
+            }), Encoding.UTF8, "application/json");
             var response = cliente.PostAsync("api/login", content).Result;
             if (response.IsSuccessStatusCode)
             {

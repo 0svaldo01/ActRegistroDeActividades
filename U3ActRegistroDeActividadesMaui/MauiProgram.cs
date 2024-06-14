@@ -15,7 +15,7 @@ namespace U3ActRegistroDeActividadesMaui
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://departamentoseq1.websitos256.com/") };
+            HttpClient client = new HttpClient() { BaseAddress = new Uri("http://u3eqpo1actapi.com/") };
  
 
             builder.Services.AddSingleton(client);
