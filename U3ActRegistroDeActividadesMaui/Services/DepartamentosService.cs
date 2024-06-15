@@ -11,7 +11,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
         public DepartamentosService()
         {
             //Este link puede cambiar
-            cliente = IPlatformApplication.Current.Services.GetService<HttpClient>()??new HttpClient();
+            cliente = IPlatformApplication.Current != null ?
+                IPlatformApplication.Current.Services.GetService<HttpClient>() ?? new HttpClient() : new();
         }
 
         public event Action? DatosActualizadosDep;
@@ -111,6 +112,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
             return null;
         }
         #endregion
+
         #region Create
         public async Task Insert(DepartamentoDTO dto)
         {

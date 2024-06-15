@@ -1,11 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 using U3ActRegistroDeActividadesMaui.Models.Validators;
@@ -16,53 +11,64 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
 {
     public partial class DepartamentosViewModel : ObservableObject
     {
-        DepartamentosRepository departamentosRepository = new();
+        #region Repositorios
+        private readonly DepartamentosRepository departamentosRepository = new();
+        #endregion
 
-        public ObservableCollection<Departamentos> Departamentos { get; set; } = new();
-        DepartamentosService service = new();
-        DepartamentoDTOValidator validator = new();
+        #region Listas
+        public ObservableCollection<Departamentos> Departamentos { get; set; } = [];
+        #endregion
+        #region Modelos
+        public Departamentos DepartamentoSeleccionado { get; set; } = new();
 
+        [ObservableProperty]
+        private DepartamentoDTO departamento = new();
+        [ObservableProperty]
+        private string error = "";
+        #endregion
+        #region Servicios
+        private readonly DepartamentosService service = new();
+        #endregion
+        #region Validadores
+        private readonly DepartamentoDTOValidator validator = new();
+        #endregion
         public DepartamentosViewModel()
         {
+            #region Subscripciones
+            App.DepartamentosService.DatosActualizadosDep += DepartamentosService_DatosActualizadosDep;
+            #endregion
+        }
+        #region Actualizar Listas
+        void ActualizarDepartamentos()
+        {
             Departamentos.Clear();
+            //Traer la base de datos local
             foreach (var dep in departamentosRepository.GetAll())
             {
                 Departamentos.Add(dep);
             }
-        }
-
-        void ActualizarDepartamentos()
-        {
-            ActualizarDepartamentos();
-            App.DepartamentosService.DatosActualizadosDep += DepartamentosService_DatosActualizadosDep;
+            DepartamentosService_DatosActualizadosDep();
         }
 
         private void DepartamentosService_DatosActualizadosDep()
         {
+            //Espera 1 segundos
+            Task.Delay(1000);
             ActualizarDepartamentos();
         }
+        #endregion
 
-        [ObservableProperty]
-        private DepartamentoDTO? departamento;
-        [ObservableProperty]
-        private string error = "";
-
-
-        [RelayCommand]
-        public void Nuevo()
-        {
-            Departamento = new();
-            Shell.Current.GoToAsync("//AgregarDep");
-        }
-
+        #region Vistas
         [RelayCommand]
         public void Cancelar()
         {
-            Departamento = null;
+            Departamento = new();
             Error = "";
             Shell.Current.GoToAsync("//ListaDep");
         }
-
+        #endregion
+        #region Comandos
+        #region Create
         [RelayCommand]
         public async Task Agregar()
         {
@@ -88,5 +94,16 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 Error = ex.Message;
             }
         }
+        #endregion
+        #region Read
+        //Hacer una peticion Get a la api
+        #endregion
+        #region Update
+        //Hacer una peticion Put a la api
+        #endregion
+        #region Delete
+        //Hacer una peticion Delete a la api
+        #endregion
+        #endregion
     }
 }

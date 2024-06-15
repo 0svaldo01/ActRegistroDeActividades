@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using System;
-using System.IO;
-using System.Net.Http;
+﻿using System.Text;
 
 
 namespace U3ActRegistroDeActividadesMaui.Helpers
 {
     public class ImagenABase64
     {
-        private string base64Image;
+        private string base64Image = "";
         private async void OnSelectImageClicked(object sender, EventArgs e)
         {
             try
@@ -26,21 +18,19 @@ namespace U3ActRegistroDeActividadesMaui.Helpers
 
                 if (result != null)
                 {
-                    using (var stream = await result.OpenReadAsync())
-                    {
-                        var memoryStream = new MemoryStream();
-                        await stream.CopyToAsync(memoryStream);
-                        byte[] imageBytes = memoryStream.ToArray();
-                        base64Image = Convert.ToBase64String(imageBytes);
+                    using var stream = await result.OpenReadAsync();
+                    var memoryStream = new MemoryStream();
+                    await stream.CopyToAsync(memoryStream);
+                    byte[] imageBytes = memoryStream.ToArray();
+                    base64Image = Convert.ToBase64String(imageBytes);
 
-                        SelectedImage.Source = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                        ((Button)FindByName("SendImage")).IsEnabled = true;
-                    }
+                    //SelectedImage.Source = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                    //((Button)FindByName("SendImage")).IsEnabled = true;
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", ex.Message, "OK");
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
         }
 
@@ -53,21 +43,21 @@ namespace U3ActRegistroDeActividadesMaui.Helpers
 
         private async Task SendImageToApi(string base64Image, string apiUrl)
         {
-            using (HttpClient client = new HttpClient())
-            {
-                var content = new StringContent($"{{\"image\":\"{base64Image}\"}}", Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+            using HttpClient client = new();
+            var content = new StringContent($"{{\"image\":\"{base64Image}\"}}", Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    await DisplayAlert("Success", "Image uploaded successfully!", "OK");
-                }
-                else
-                {
-                    await DisplayAlert("Error", $"Failed to upload image. Status code: {response.StatusCode}", "OK");
-                }
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrWhiteSpace(responseContent))
+                    await Shell.Current.DisplayAlert("Success", "Image uploaded successfully!", "OK");
+                await Shell.Current.DisplayAlert("Failed", "Image were not uploaded!", "OK");
             }
-        } 
+            else
+            {
+                //await DisplayAlert("Error", $"Failed to upload image. Status code: {response.StatusCode}", "OK");
+            }
+        }
     }
 }

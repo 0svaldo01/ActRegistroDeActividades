@@ -1,21 +1,16 @@
 ﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 
 namespace U3ActRegistroDeActividadesMaui.Repositories
 {
     public class ActividadesRepository
     {
-        SQLiteConnection context;
+        private readonly SQLiteConnection context;
 
         public ActividadesRepository()
         {
             string ruta = FileSystem.AppDataDirectory + "/actividades.db3";
-            context = new SQLiteConnection(ruta);            
+            context = new SQLiteConnection(ruta);
             //context.CreateTable<Actividades>();
         }
 
@@ -27,7 +22,7 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
         public IEnumerable<Actividades> GetAll()
         {
             return context.Table<Actividades>()
-                .OrderBy(x=>x.FechaCreacion);
+                .OrderBy(x => x.FechaCreacion);
         }
 
         public Actividades? Get(int id)

@@ -1,21 +1,19 @@
 ﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 
 namespace U3ActRegistroDeActividadesMaui.Repositories
 {
     public class DepartamentosRepository
     {
+        //Conexion Sqlite
         SQLiteConnection context;
 
         public DepartamentosRepository()
         {
+            //Base de datos local
             string ruta = FileSystem.AppDataDirectory + "/actividades.db3";
             context = new SQLiteConnection(ruta);
+            //Creacion de Tablas
             context.CreateTable<Actividades>();
             context.CreateTable<Departamentos>();
         }

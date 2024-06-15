@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:U3ActRegistroDeActividadesMaui.ViewModels"
              x:Class="U3ActRegistroDeActividadesMaui.Views.ListaView"
              Background="#D9D9D9">
     <ContentPage.Resources>
@@ -17,14 +18,26 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-  
-  
+
+    <ContentPage.BindingContext>
+        <vm:DepartamentosViewModel></vm:DepartamentosViewModel>
+    </ContentPage.BindingContext>
     <VerticalStackLayout>
         <HorizontalStackLayout>
-            <Button Text="+ Departamento" BackgroundColor="#52BC70" TextColor="White" WidthRequest="140" Margin="10"
-           />
-            <Button Text="+ Actividad" BackgroundColor="#52BC70" TextColor="White" WidthRequest="140" Margin="10"
-                HorizontalOptions="End"/>
+            <Button Text="+ Departamento" 
+                    BackgroundColor="#52BC70" 
+                    TextColor="White" 
+                    WidthRequest="140"
+                    Margin="10"
+                    
+                    />
+            <Button Text="+ Actividad" 
+                    BackgroundColor="#52BC70" 
+                    TextColor="White" 
+                    WidthRequest="140" 
+                    Margin="10"
+                    HorizontalOptions="End"
+                    Command="{Binding VerAgregarDepartamentoCommand}"/>
         </HorizontalStackLayout>
 
 
@@ -36,100 +49,19 @@
                         <SwipeItem Text="Eliminar" BackgroundColor="LightPink" />
                     </SwipeItems>
                 </SwipeView.RightItems>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
+                <ListView ItemsSource="{Binding Departamentos}" SelectedItem="{Binding DepartamentoSeleccionado}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame>
+                                <Grid>
+                                    <Label Text="{Binding Nombre}" FontAttributes="Bold"></Label>
+                                    <Label Text="{Binding Actividades.Count}"></Label>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </SwipeView>
-            <!--<StackLayout>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-                <Frame>
-                    <StackLayout>
-                        <Label Text="Apertura de conferencia" FontAttributes="Bold"></Label>
-                        <Label Text="20/05/2024"></Label>
-                    </StackLayout>
-                </Frame>
-
-            </StackLayout>-->
         </ScrollView>
       
     </VerticalStackLayout>

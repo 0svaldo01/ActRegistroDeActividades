@@ -16,9 +16,6 @@
     <Shell.BindingContext>
         <viewmodels:ShellViewModel></viewmodels:ShellViewModel>
     </Shell.BindingContext>
-
-    
-    
     <ShellContent 
         ContentTemplate="{DataTemplate views:ListaView}" 
         Route="ListaAct"
@@ -26,8 +23,6 @@
 
     <ShellContent
         ContentTemplate="{DataTemplate views:AgregarView}" Route="AgregarAct"></ShellContent>
-
-
     <ShellContent
         ContentTemplate="{DataTemplate views:AgregarDepView}" Route="AgregarDep"></ShellContent>
 

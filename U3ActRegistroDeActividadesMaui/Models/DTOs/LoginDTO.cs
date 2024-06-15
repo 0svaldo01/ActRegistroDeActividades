@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace U3ActRegistroDeActividadesMaui.Models.DTOs
+﻿namespace U3ActRegistroDeActividadesMaui.Models.DTOs
 {
     public class LoginDTO
     {
-        public string Username { get; set; } = null!;
-        public string Password { get; set; } = null!;
+        public string correo { get; set; } = null!;
+        public string contraseña { get; set; } = null!;
     }
 }

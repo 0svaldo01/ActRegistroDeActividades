@@ -1,11 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 using U3ActRegistroDeActividadesMaui.Models.Validators;
@@ -16,18 +11,15 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
 {
     public partial class ActividadesViewModel : ObservableObject
     {
-        ActividadesRepository actividadesRepository = new();
+        private readonly ActividadesRepository actividadesRepository = new();
         public ObservableCollection<Actividades> Actividades { get; set; } = new();
-        ActividadesService service = new();
-        ActividadDTOValidator validador = new();
+
+        private readonly ActividadesService service = new();
+        private readonly ActividadDTOValidator validador = new();
 
         public ActividadesViewModel()
         {
             Actividades.Clear();
-            foreach (var act in actividadesRepository.GetAll())
-            {
-                Actividades.Add(act);
-            }
         }
 
         void ActualizarActividades()

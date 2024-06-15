@@ -6,12 +6,10 @@ namespace U3ActRegistroDeActividadesMaui
 {
     public partial class App : Application
     {
-        public static ActividadesService ActividadesService { get; set; }
-        public static DepartamentosService DepartamentosService { get; set; }
-
-        public static ActividadesRepository ActividadesRepository { get; set; }
-        public static DepartamentosRepository DepartamentosRepository { get; set; }
-
+        public static ActividadesService ActividadesService { get; set; } = new();
+        public static DepartamentosService DepartamentosService { get; set; } = new();
+        public static ActividadesRepository ActividadesRepository { get; set; } = new();
+        public static DepartamentosRepository DepartamentosRepository { get; set; } = new();
 
         public App()
         {
@@ -42,15 +40,14 @@ namespace U3ActRegistroDeActividadesMaui
             }
         }
 
-        async void Sincronizador()
-        {
-            while (true)
-            {
-                await ActividadesService.GetActividades();
-                await DepartamentosService.GetDepartamentos();
-                Thread.Sleep(TimeSpan.FromSeconds(15));
-            }
-        }
+        //private async void Sincronizador()
+        //{
+        //    while (true)
+        //    {
+        //        await DepartamentosService.GetDepartamentos();
+        //        Thread.Sleep(TimeSpan.FromSeconds(15));
+        //    }
+        //}
 
         //buscando otra manera
         //protected override void OnStart()

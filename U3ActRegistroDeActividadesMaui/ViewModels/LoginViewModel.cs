@@ -1,46 +1,44 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using U3ActRegistroDeActividadesMaui.Services;
 
 namespace U3ActRegistroDeActividadesMaui.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
-        LoginService LoginService = new(IPlatformApplication.Current.Services.GetService<HttpClient>() ?? new HttpClient());
+        private readonly LoginService LoginService = new(
+                                                     new HttpClient()
+                                                     {
+                                                         BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api")
+                                                     });
         [ObservableProperty]
-        string error;
+        string error = "";
         [ObservableProperty]
-        string username;
+        string username = null!;
         [ObservableProperty]
-        string password;
+        string password = null!;
         [RelayCommand]
         void IniciarSesion()
         {
-            var cons = LoginService.Login(Username, Password);
-            if(!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
             {
-                if (cons)
-                {
-                    App.Current.MainPage = new AppShell();
-                    Username = "";
-                    Password = "";
-                    Error = "";
-                }
-                else
-                {
-                    Error = "Usuario o contraseña incorrectos";
-                }
+
             }
             else
             {
-                Error = "Por favor llene los campos";
+                var cons = LoginService.Login(Username, Password);
+                if (cons)
+                {
+                    if (App.Current != null)
+                    {
+                        App.Current.MainPage = new AppShell();
+                    }
+                }
+                else
+                {
+                    Error = "Usuario o contra incorrectos";
+                }
             }
-           
         }
     }
 }

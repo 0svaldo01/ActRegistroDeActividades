@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Repositories;
 
@@ -12,27 +7,25 @@ namespace U3ActRegistroDeActividadesMaui.Services
 {
     public class ActividadesService
     {
-
-        Repositories.ActividadesRepository actividadesRepository = new();
+        private readonly ActividadesRepository actividadesRepository = new();
         private readonly HttpClient cliente;
-
         public ActividadesService()
         {
-            cliente = IPlatformApplication.Current.Services.GetService<HttpClient>()??new HttpClient();
+            cliente = IPlatformApplication.Current != null ?
+                IPlatformApplication.Current.Services.GetService<HttpClient>() ?? new HttpClient() : new();
+            cliente.BaseAddress = new Uri("http://u3eqpo1actapi.com/api/");
         }
 
         public event Action? DatosActualizadosAct;
-
         #region Read
-        public async Task GetActividades()
+        public async Task GetActividades(int id)
         {
             try
             {
                 var fecha = Preferences.Get("UltimaFechaActualizacion", DateTime.MinValue);
-
                 bool aviso = false;
 
-                var response = await cliente.GetFromJsonAsync<List<ActividadDTO>>($"/Actividades/{fecha:yyyy-MM-dd}/{fecha:HH}/{fecha:mm}");
+                var response = await cliente.GetFromJsonAsync<List<ActividadDTO>>($"/Actividades/{id}");
                 if (response != null)
                 {
                     foreach (ActividadDTO actividad in response)
@@ -40,7 +33,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
                         var entidad = actividadesRepository.Get(actividad.Id);
 
                         //estado 0 = Borrador, estado 1 = Publicado, estado 2 = eliminado
-                        if (entidad == null && actividad.Estado == 3) // 2 si esta eliminado
+                        if (entidad != null && (actividad.Estado == 0 || actividad.Estado == 1)
+                            && actividad.FechaRealizacion != null) // 2 si esta eliminado
                         {
                             entidad = new()
                             {
@@ -63,7 +57,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
                                 }
                                 else
                                 {
-
                                     if (actividad.Titulo != entidad.Titulo || actividad.Descripcion != actividad.Descripcion
                                         || actividad.FechaRealizacion != actividad.FechaRealizacion)
                                     {
@@ -73,10 +66,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
                                 }
                             }
                         }
-
-
                     }
-
                     if (aviso)
                     {
 
@@ -85,17 +75,12 @@ namespace U3ActRegistroDeActividadesMaui.Services
                             DatosActualizadosAct?.Invoke();
                         });
                     }
-
                     Preferences.Set("UltimaFechaActualizacion", response.Max(x => x.FechaActualizacion));
                 }
             }
-            catch
-            {
-
-            }
+            catch { }
         }
-
-        public async Task<IEnumerable<ActividadDTO>?>? GetAll(ActividadDTO dto)
+        public async Task<IEnumerable<ActividadDTO>?>? GetAll()
         {
             try
             {
@@ -113,8 +98,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
             }
             return null;
         }
-
-        
         public async Task<ActividadDTO?> Get(ActividadDTO dto)
         {
             try

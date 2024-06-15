@@ -15,12 +15,10 @@ namespace U3ActRegistroDeActividadesMaui
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            HttpClient client = new HttpClient() { BaseAddress = new Uri("http://u3eqpo1actapi.com/") };
- 
-
+            HttpClient client = new() { BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api") };
             builder.Services.AddSingleton(client);
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
