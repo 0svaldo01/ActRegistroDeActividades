@@ -29,15 +29,15 @@
                     TextColor="White" 
                     WidthRequest="140"
                     Margin="10"
-                    
+                     Command="{Binding VerAgregarDepartamentoCommand}"
                     />
-            <Button Text="+ Actividad" 
+            <!--<Button Text="+ Actividad" 
                     BackgroundColor="#52BC70" 
                     TextColor="White" 
                     WidthRequest="140" 
                     Margin="10"
                     HorizontalOptions="End"
-                    Command="{Binding VerAgregarDepartamentoCommand}"/>
+                   />-->
         </HorizontalStackLayout>
 
 

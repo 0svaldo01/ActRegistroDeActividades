@@ -10,25 +10,32 @@
     Shell.BackgroundColor="#277B3F"
     Title="U3ActRegistroDeActividadesMaui">
 
+    <Shell.BindingContext>
+        <viewmodels:ShellViewModel></viewmodels:ShellViewModel>
+        <!--<viewmodels:DepartamentosViewModel></viewmodels:DepartamentosViewModel>-->
+    </Shell.BindingContext>
+
     <Shell.ToolbarItems>
         <ToolbarItem Text="Cerrar sesion" Command="{Binding CerrarSesionCommand}" Order="Primary"/>
     </Shell.ToolbarItems>
-    <Shell.BindingContext>
-        <viewmodels:ShellViewModel></viewmodels:ShellViewModel>
-        <viewmodels:DepartamentosViewModel></viewmodels:DepartamentosViewModel>
-    </Shell.BindingContext>
+
     <ShellContent 
         ContentTemplate="{DataTemplate views:ListaView}" 
-        Route="ListaAct"
-        Title="Lista de Actividades">
+        Route="ListaDep"
+        Title="Lista de Departamentos">
     </ShellContent>
+    
     <ShellContent
-        ContentTemplate="{DataTemplate views:AgregarView}" Route="AgregarAct"></ShellContent>
+        ContentTemplate="{DataTemplate views:AgregarView}" Route="AgregarAct"
+        Title="Agregar actividad"></ShellContent>
     <ShellContent
-        ContentTemplate="{DataTemplate views:AgregarDepView}" Route="AgregarDep"></ShellContent>
+        ContentTemplate="{DataTemplate views:AgregarDepView}"
+        Route="AgregarDepView"
+        Title="Agregar departamento"></ShellContent>
 
     <ShellContent
-        ContentTemplate="{DataTemplate views:EditarView}" Route="EditarAct"></ShellContent>
+        ContentTemplate="{DataTemplate views:EditarView}" Route="EditarAct"
+        Title="Editar actividad"></ShellContent>
     
     <ShellContent
         Title="Home"

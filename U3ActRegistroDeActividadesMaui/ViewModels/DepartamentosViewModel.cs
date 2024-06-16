@@ -66,6 +66,12 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             Error = "";
             Shell.Current.GoToAsync("//ListaDep");
         }
+
+        [RelayCommand]
+        public async Task VerAgregarDepartamento()
+        {
+            await Shell.Current.GoToAsync("//AgregarDepView");
+        }
         #endregion
         #region Comandos
         #region Create
