@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 
@@ -14,8 +16,8 @@ namespace U3ActRegistroDeActividadesMaui.Services
             //cliente = IPlatformApplication.Current != null ?
             //    IPlatformApplication.Current.Services.GetService<HttpClient>() ?? new HttpClient() : new();
 
-            HttpClient Client;
-            Client = new() 
+            HttpClient Cliente;
+            Cliente = new() 
             {
                 BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/")
             };
@@ -24,52 +26,90 @@ namespace U3ActRegistroDeActividadesMaui.Services
         public event Action? DatosActualizadosDep;
 
         #region Read
+        public async Task<string> GetTokenAsync()
+        {
+            return await SecureStorage.GetAsync("tkn");
+        }
+        
+        public async Task<string> GetDepartamentosIntento()
+        {
+            try
+            {
+                string token = await GetTokenAsync();
+                if (string.IsNullOrEmpty(token))
+                {
+                    throw new UnauthorizedAccessException("No autorizado");
+                }
+                cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                HttpResponseMessage response = await cliente.GetAsync("Departamentos");
+                response.EnsureSuccessStatusCode();
+                string responseData = await response.Content.ReadAsStringAsync();
+                return responseData;
+
+            }
+            catch (HttpRequestException e)
+            {              
+                Console.WriteLine($"Request error: {e.Message}");
+                return null;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine($"Authorization error: {e.Message}");
+                return null;
+            }
+
+        }
+
         public async Task GetDepartamentos()
         {
             try
             {
                 bool aviso = false;
+                
 
-                var response = await cliente.GetFromJsonAsync<List<DepartamentoDTO>>($"/Departamentos");
+              
+                    var response = await cliente.GetFromJsonAsync<List<DepartamentoDTO>>($"/Departamentos");
 
-                if (response != null)
-                {
-                    foreach (DepartamentoDTO departamento in response)
+                    if (response != null)
                     {
-                        var anterior = departamentosRepository.Get(departamento.Id);
-
-                        if (anterior == null)
+                        foreach (DepartamentoDTO departamento in response)
                         {
-                            anterior = new()
+                            var anterior = departamentosRepository.Get(departamento.Id);
+
+                            if (anterior == null)
                             {
-                                Id = departamento.Id,
-                                Username = departamento.Username
-                            };
-                            departamentosRepository.Insert(anterior);
-                            aviso = true;
-                        }
-                        else
-                        {
-                            anterior.Nombre = departamento.Nombre;
-
-                        }
-
-                        if (aviso)
-                        {
-
-                            _ = MainThread.InvokeOnMainThreadAsync(() =>
+                                anterior = new()
+                                {
+                                    Id = departamento.Id,
+                                    Username = departamento.Username
+                                };
+                                departamentosRepository.Insert(anterior);
+                                aviso = true;
+                            }
+                            else
                             {
-                                DatosActualizadosDep?.Invoke();
-                            });
-                        }
+                                anterior.Nombre = departamento.Nombre;
 
+                            }
+
+                            if (aviso)
+                            {
+
+                                _ = MainThread.InvokeOnMainThreadAsync(() =>
+                                {
+                                    DatosActualizadosDep?.Invoke();
+                                });
+                            }
+
+                        }
                     }
-                }
+                
             }
             catch
             {
 
-            }
+            } 
         }
 
         public async Task<IEnumerable<DepartamentoDTO>?>? GetAll()

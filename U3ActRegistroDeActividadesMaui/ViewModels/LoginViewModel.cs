@@ -7,16 +7,19 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
     public partial class LoginViewModel : ObservableObject
     {
         private readonly LoginService LoginService = new(
-                                                     new HttpClient()
-                                                     {
-                                                         BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api")
-                                                     });
+                                                     
+            new HttpClient()                                                    
+            {                                                         
+                BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api")                                                     
+            });
+
         [ObservableProperty]
         string error = "";
         [ObservableProperty]
         string username = null!;
         [ObservableProperty]
         string password = null!;
+
         [RelayCommand]
         void IniciarSesion()
         {
