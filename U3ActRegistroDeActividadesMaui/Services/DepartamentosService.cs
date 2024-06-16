@@ -10,9 +10,15 @@ namespace U3ActRegistroDeActividadesMaui.Services
         private readonly Repositories.DepartamentosRepository departamentosRepository = new();
         public DepartamentosService()
         {
-            //Este link puede cambiar
-            cliente = IPlatformApplication.Current != null ?
-                IPlatformApplication.Current.Services.GetService<HttpClient>() ?? new HttpClient() : new();
+            ////Este link puede cambiar
+            //cliente = IPlatformApplication.Current != null ?
+            //    IPlatformApplication.Current.Services.GetService<HttpClient>() ?? new HttpClient() : new();
+
+            HttpClient Client;
+            Client = new() 
+            {
+                BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/")
+            };
         }
 
         public event Action? DatosActualizadosDep;
@@ -22,11 +28,9 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
-                var fecha = Preferences.Get("UltimaFechaActualizacion", DateTime.MinValue);
-
                 bool aviso = false;
 
-                var response = await cliente.GetFromJsonAsync<List<DepartamentoDTO>>($"/Departamentos/{fecha:yyyy-MM-dd}/{fecha:HH}/{fecha:mm}");
+                var response = await cliente.GetFromJsonAsync<List<DepartamentoDTO>>($"/Departamentos");
 
                 if (response != null)
                 {
@@ -58,8 +62,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
                                 DatosActualizadosDep?.Invoke();
                             });
                         }
-
-                        //Preferences.Set("UltimaFechaActualizacion", response.Max(x => ));
 
                     }
                 }

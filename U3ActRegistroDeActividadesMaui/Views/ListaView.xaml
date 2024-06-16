@@ -55,7 +55,6 @@
                             <Frame>
                                 <Grid>
                                     <Label Text="{Binding Nombre}" FontAttributes="Bold"></Label>
-                                    <Label Text="{Binding Actividades.Count}"></Label>
                                 </Grid>
                             </Frame>
                         </DataTemplate>

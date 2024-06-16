@@ -15,12 +15,13 @@
     </Shell.ToolbarItems>
     <Shell.BindingContext>
         <viewmodels:ShellViewModel></viewmodels:ShellViewModel>
+        <viewmodels:DepartamentosViewModel></viewmodels:DepartamentosViewModel>
     </Shell.BindingContext>
     <ShellContent 
         ContentTemplate="{DataTemplate views:ListaView}" 
         Route="ListaAct"
-        Title="Lista de Actividades"></ShellContent>
-
+        Title="Lista de Actividades">
+    </ShellContent>
     <ShellContent
         ContentTemplate="{DataTemplate views:AgregarView}" Route="AgregarAct"></ShellContent>
     <ShellContent
