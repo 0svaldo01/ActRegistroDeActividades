@@ -6,15 +6,27 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
 {
     public partial class ShellViewModel : ObservableObject
     {
+        public ShellViewModel()
+        {
+            // Creacion de hilo para verificar que el token sea valido
+            //Thread hilo = new(new ParameterizedThreadStart(VerificarToken))
+            //{
+            //    IsBackground = true,
+            //};
+            //hilo.Start();
+        }
 
-        //[RelayCommand]
-
-        //[RelayCommand]
-        //public void VerAgregarDepartamento()
+        //private void VerificarToken(object? obj)
         //{
-        //    Departamento = new();
-        //    Shell.Current.GoToAsync("//AgregarDep");
+        //Pendiente validar el token
+        //    var token = SecureStorage.GetAsync("tkn");
+        //    if (string.IsNullOrWhiteSpace(token.Result))
+        //    {
+        //        //Elimina el token
+        //        SecureStorage.Remove("tkn");
+        //    }
         //}
+
         [RelayCommand]
         static async Task CerrarSesion()
         {

@@ -4,15 +4,13 @@ using System.Collections.ObjectModel;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 using U3ActRegistroDeActividadesMaui.Models.Validators;
-using U3ActRegistroDeActividadesMaui.Repositories;
 using U3ActRegistroDeActividadesMaui.Services;
 
 namespace U3ActRegistroDeActividadesMaui.ViewModels
 {
     public partial class ActividadesViewModel : ObservableObject
     {
-        private readonly ActividadesRepository actividadesRepository = new();
-        public ObservableCollection<Actividades> Actividades { get; set; } = new();
+        public ObservableCollection<Actividades> Actividades { get; set; } = [];
 
         private readonly ActividadesService service = new();
         private readonly ActividadDTOValidator validador = new();
@@ -22,17 +20,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             Actividades.Clear();
         }
 
-        void ActualizarActividades()
-        {
-            ActualizarActividades();
-            App.ActividadesService.DatosActualizadosAct += ActividadesService_DatosActualizados;
-        }
-
-        private void ActividadesService_DatosActualizados()
-        {
-            ActualizarActividades();
-        }
-
         [ObservableProperty]
         private ActividadDTO? actividad;
 
@@ -40,18 +27,18 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         private string error = "";
 
         [RelayCommand]
-        public void Nuevo()
+        public async void Nuevo()
         {
             Actividad = new();
-            Shell.Current.GoToAsync("//AgregarAct");
+            await Shell.Current.GoToAsync("//AgregarAct");
         }
 
         [RelayCommand]
-        public void Cancelar()
+        public async void Cancelar()
         {
             Actividad = null;
             Error = "";
-            Shell.Current.GoToAsync("//ListaAct");
+            await Shell.Current.GoToAsync("//ListaAct");
         }
 
         [RelayCommand]
@@ -65,7 +52,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                     if (resultado.IsValid)
                     {
                         await service.Insert(Actividad);
-                        ActualizarActividades();
                         Cancelar();
                     }
                     else

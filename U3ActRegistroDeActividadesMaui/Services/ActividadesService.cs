@@ -14,15 +14,14 @@ namespace U3ActRegistroDeActividadesMaui.Services
             {
                 BaseAddress = new Uri("http://u3eqpo1actapi.com/api/Actividades/")
             };
-            var token = SecureStorage.GetAsync("tkn");
-            if (string.IsNullOrEmpty(token.Result))
+            var token = SecureStorage.GetAsync("tkn").Result;
+            if (string.IsNullOrEmpty(token))
             {
                 throw new UnauthorizedAccessException("No autorizado");
             }
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Result);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
-        public event Action? DatosActualizadosAct;
         #region Read
         public async Task<ActividadDTO> GetActividad(int id)
         {

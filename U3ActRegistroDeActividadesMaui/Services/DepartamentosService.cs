@@ -13,12 +13,12 @@ namespace U3ActRegistroDeActividadesMaui.Services
             {
                 BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api/Departamentos/")
             };
-            var token = SecureStorage.GetAsync("tkn");
-            if (string.IsNullOrEmpty(token.Result))
+            var token = SecureStorage.GetAsync("tkn").Result;
+            if (string.IsNullOrEmpty(token))
             {
                 throw new UnauthorizedAccessException("No autorizado");
             }
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Result);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         #region Read
