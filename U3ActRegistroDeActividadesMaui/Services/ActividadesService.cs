@@ -1,84 +1,44 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
-using U3ActRegistroDeActividadesMaui.Repositories;
 
 namespace U3ActRegistroDeActividadesMaui.Services
 {
     public class ActividadesService
     {
-        private readonly ActividadesRepository actividadesRepository = new();
         private readonly HttpClient cliente;
         public ActividadesService()
         {
-            cliente = IPlatformApplication.Current != null ?
-                IPlatformApplication.Current.Services.GetService<HttpClient>() ?? new HttpClient() : new();
-            cliente.BaseAddress = new Uri("http://u3eqpo1actapi.com/api/");
+            cliente = new()
+            {
+                BaseAddress = new Uri("http://u3eqpo1actapi.com/api/Actividades/")
+            };
+            var token = SecureStorage.GetAsync("tkn");
+            if (string.IsNullOrEmpty(token.Result))
+            {
+                throw new UnauthorizedAccessException("No autorizado");
+            }
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Result);
         }
 
         public event Action? DatosActualizadosAct;
         #region Read
-        public async Task GetActividades(int id)
+        public async Task<ActividadDTO> GetActividad(int id)
         {
             try
             {
-                var fecha = Preferences.Get("UltimaFechaActualizacion", DateTime.MinValue);
-                bool aviso = false;
-
-                var response = await cliente.GetFromJsonAsync<List<ActividadDTO>>($"/Actividades/{id}");
+                var response = await cliente.GetFromJsonAsync<ActividadDTO>($"{id}");
                 if (response != null)
                 {
-                    foreach (ActividadDTO actividad in response)
-                    {
-                        var entidad = actividadesRepository.Get(actividad.Id);
-
-                        //estado 0 = Borrador, estado 1 = Publicado, estado 2 = eliminado
-                        if (entidad != null && (actividad.Estado == 0 || actividad.Estado == 1)
-                            && actividad.FechaRealizacion != null) // 2 si esta eliminado
-                        {
-                            entidad = new()
-                            {
-                                Id = actividad.Id,
-                                Titulo = actividad.Titulo,
-                                Descripcion = actividad.Descripcion,
-                                FechaRealizacion = new DateTime(actividad.FechaRealizacion.Value.Year, actividad.FechaRealizacion.Value.Month, actividad.FechaRealizacion.Value.Day),
-                            };
-                            actividadesRepository.Insert(entidad);
-                            aviso = true;
-                        }
-                        else
-                        {
-                            if (entidad != null)
-                            {
-                                if (actividad.Estado == 2)
-                                {
-                                    actividadesRepository.Delete(entidad);
-                                    aviso = true;
-                                }
-                                else
-                                {
-                                    if (actividad.Titulo != entidad.Titulo || actividad.Descripcion != actividad.Descripcion
-                                        || actividad.FechaRealizacion != actividad.FechaRealizacion)
-                                    {
-                                        actividadesRepository.Update(entidad);
-                                        aviso = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (aviso)
-                    {
-
-                        _ = MainThread.InvokeOnMainThreadAsync(() =>
-                        {
-                            DatosActualizadosAct?.Invoke();
-                        });
-                    }
-                    Preferences.Set("UltimaFechaActualizacion", response.Max(x => x.FechaActualizacion));
+                    return response;
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Request error: {e.Message}", "Ok");
+            }
+            return new();
         }
         public async Task<IEnumerable<ActividadDTO>?>? GetAll()
         {
@@ -122,7 +82,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
-                var response = await cliente.PostAsJsonAsync("/AgregarAct", dto);
+                var response = await cliente.PostAsJsonAsync("Agregar", dto);
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
@@ -136,7 +96,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
-                var response = await cliente.PutAsJsonAsync("/EditarAct", dto);
+                var response = await cliente.PutAsJsonAsync("Editar", dto);
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
@@ -150,7 +110,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
-                var response = await cliente.DeleteAsync($"/EliminarAct/{dto.Id}");
+                var response = await cliente.DeleteAsync($"/Eliminar/{dto.Id}");
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
