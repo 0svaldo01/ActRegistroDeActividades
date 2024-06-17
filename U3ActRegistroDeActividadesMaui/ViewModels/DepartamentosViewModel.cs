@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.IdentityModel.Tokens.Jwt;
+using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
+using U3ActRegistroDeActividadesMaui.Models.Validators;
 using U3ActRegistroDeActividadesMaui.Repositories;
 using U3ActRegistroDeActividadesMaui.Services;
 
@@ -21,7 +23,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         public Departamentos DepartamentoSeleccionado { get; set; } = new();
 
         [ObservableProperty]
-        private Departamentos departamento = new();
+        private DepartamentoDTO departamento = new();
 
         [ObservableProperty]
         private string error = "";
@@ -29,18 +31,20 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         #region Servicios
         private readonly DepartamentosService service = new();
         #endregion
-        //#region Validadores
-        //private readonly DepartamentoDTOValidator validator = new();
-        //#endregion
+        #region Validadores
+        private readonly DepartamentoDTOValidator validator = new();
+        #endregion
         public DepartamentosViewModel()
         {
             Iniciar();
         }
-
+        #region Actualizar Listas
         private async void Iniciar()
         {
             var id = await GetToken();
             await HacerPeticionGet(id);
+            //Id Token 97
+            //IdSuperior 97 => 1
         }
         public async Task<int> GetToken()
         {
@@ -56,11 +60,8 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             }
             return 0;
         }
-
-        #region Actualizar Listas
         private async Task HacerPeticionGet(int id)
         {
-
             //Obtener los departamentos de la API
             var departamentosServer = await service.GetDepartamentos(id);
             if (departamentosServer.Id > 0)
@@ -180,7 +181,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             }
         }
         #endregion
-
         #region Vistas
         [RelayCommand]
         public void Cancelar()
@@ -189,7 +189,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             //Error = "";
             Shell.Current.GoToAsync("//ListaDep");
         }
-
         [RelayCommand]
         public async Task VerAgregarDepartamento()
         {
@@ -197,43 +196,43 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             await Shell.Current.GoToAsync("//AgregarDepView");
         }
         #endregion
-        //#region Comandos
-        //#region Create
-        //[RelayCommand]
-        //public async Task Agregar()
-        //{
-        //    try
-        //    {
-        //        if (Departamento != null)
-        //        {
-        //            var resultado = validator.Validate(Departamento);
-        //            if (resultado.IsValid)
-        //            {
-        //                await service.Insert(Departamento);
-        //                ActualizarDepartamentos();
-        //                Cancelar();
-        //            }
-        //            else
-        //            {
-        //                Error = string.Join("\n", resultado.Errors.Select(x => x.ErrorMessage));
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Error = ex.Message;
-        //    }
-        //}
-        //#endregion
-        //#region Read
-        ////Hacer una peticion Get a la api
-        //#endregion
-        //#region Update
-        ////Hacer una peticion Put a la api
-        //#endregion
-        //#region Delete
-        ////Hacer una peticion Delete a la api
-        //#endregion
-        //#endregion
+        #region Comandos
+        #region Create
+        [RelayCommand]
+        public async Task Agregar()
+        {
+            try
+            {
+                if (Departamento != null)
+                {
+                    var resultado = validator.Validate(Departamento);
+                    if (resultado.IsValid)
+                    {
+                        await service.Insert(Departamento);
+                        ActualizarDepartamentos();
+                        Cancelar();
+                    }
+                    else
+                    {
+                        Error = string.Join("\n", resultado.Errors.Select(x => x.ErrorMessage));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
+        }
+        #endregion
+        #region Read
+        //Hacer una peticion Get a la api
+        #endregion
+        #region Update
+        //Hacer una peticion Put a la api
+        #endregion
+        #region Delete
+        //Hacer una peticion Delete a la api
+        #endregion
+        #endregion
     }
 }
