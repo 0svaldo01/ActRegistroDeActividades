@@ -14,6 +14,9 @@ namespace U3ActRegistroDeActividadesMaui.Services
             {
                 BaseAddress = new Uri("http://u3eqpo1actapi.com/api/Actividades/")
             };
+        }
+        public void ActualizarToken()
+        {
             var token = SecureStorage.GetAsync("tkn").Result;
             if (string.IsNullOrEmpty(token))
             {
@@ -21,7 +24,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
             }
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
-
         #region Read
         public async Task<ActividadDTO> GetActividad(int id)
         {
@@ -43,6 +45,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
+                ActualizarToken();
                 var response = await cliente.GetAsync("/Actividades");
                 if (response.IsSuccessStatusCode)
                 {

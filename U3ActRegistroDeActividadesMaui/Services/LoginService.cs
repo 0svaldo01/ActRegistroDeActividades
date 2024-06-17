@@ -11,7 +11,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             cliente = client;
         }
-        public bool Login(string username, string password)
+        public async Task<bool> Login(string username, string password)
         {
             var content = new StringContent(JsonSerializer.Serialize(
                 new LoginDTO()
@@ -21,17 +21,14 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 }),
                 Encoding.UTF8, "application/json");
 
-            var response = cliente.PostAsync("api/login", content).Result;
+            var response = await cliente.PostAsync("api/login", content);
 
             if (response.IsSuccessStatusCode)
             {
-                SecureStorage.SetAsync("tkn", response.Content.ReadAsStringAsync().Result);
+                await SecureStorage.SetAsync("tkn", await response.Content.ReadAsStringAsync());
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

@@ -35,8 +35,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             {
                 SecureStorage.RemoveAll();
                 Preferences.Clear();
-                App.ActividadesRepository.DeleteAll();
-                App.DepartamentosRepository.DeleteAll();
                 if (App.Current != null)
                     App.Current.MainPage = new LoginView();
             }

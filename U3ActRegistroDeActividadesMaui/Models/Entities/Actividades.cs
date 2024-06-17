@@ -15,7 +15,7 @@ namespace U3ActRegistroDeActividadesMaui.Models.Entities
         [NotNull]
         public string? Descripcion { get; set; }
         [NotNull]
-        public DateTime? FechaRealizacion { get; set; }
+        public DateOnly? FechaRealizacion { get; set; }
 
         public int IdDepartamento { get; set; }
 

@@ -56,6 +56,8 @@
                             <Frame>
                                 <Grid>
                                     <Label Text="{Binding Nombre}" FontAttributes="Bold"></Label>
+                                    
+                                    <Label Grid.Column="1" Text="{Binding Actividades.Count}" FontAttributes="Bold"></Label>
                                 </Grid>
                             </Frame>
                         </DataTemplate>

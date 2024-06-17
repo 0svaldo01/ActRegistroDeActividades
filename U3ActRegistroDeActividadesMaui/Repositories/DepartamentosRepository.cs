@@ -17,7 +17,6 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
             context.CreateTable<Actividades>();
             context.CreateTable<Departamentos>();
         }
-
         public void Insert(Departamentos D)
         {
             context.Insert(D);
@@ -44,9 +43,9 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
             context.Update(D);
         }
 
-        public void Delete(Departamentos D)
+        public void Delete(int id)
         {
-            context.Delete(D);
+            context.Delete(id);
         }
         public void DeleteAll()
         {

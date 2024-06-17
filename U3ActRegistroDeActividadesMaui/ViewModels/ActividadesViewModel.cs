@@ -27,14 +27,14 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         private string error = "";
 
         [RelayCommand]
-        public async void Nuevo()
+        public async Task Nuevo()
         {
             Actividad = new();
             await Shell.Current.GoToAsync("//AgregarAct");
         }
 
         [RelayCommand]
-        public async void Cancelar()
+        public async Task Cancelar()
         {
             Actividad = null;
             Error = "";
@@ -52,7 +52,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                     if (resultado.IsValid)
                     {
                         await service.Insert(Actividad);
-                        Cancelar();
+                        await Cancelar();
                     }
                     else
                     {
@@ -65,5 +65,11 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 Error = ex.Message;
             }
         }
+        //bool VerificarConexion()
+        //{
+        //    var conexion = Connectivity.NetworkAccess;
+        //    return conexion == NetworkAccess.Internet;
+
+        //}
     }
 }

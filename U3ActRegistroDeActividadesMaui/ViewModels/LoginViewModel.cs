@@ -7,10 +7,10 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
     public partial class LoginViewModel : ObservableObject
     {
         private readonly LoginService LoginService = new(
-                                                     
-            new HttpClient()                                                    
-            {                                                         
-                BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api")                                                     
+
+            new HttpClient()
+            {
+                BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api")
             });
 
         [ObservableProperty]
@@ -21,15 +21,11 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         string password = null!;
 
         [RelayCommand]
-        void IniciarSesion()
+        async Task IniciarSesion()
         {
-            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+            if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password))
             {
-
-            }
-            else
-            {
-                var cons = LoginService.Login(Username, Password);
+                var cons = await LoginService.Login(Username, Password);
                 if (cons)
                 {
                     if (App.Current != null)

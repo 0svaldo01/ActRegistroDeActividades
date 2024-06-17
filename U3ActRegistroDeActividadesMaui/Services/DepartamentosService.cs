@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 
@@ -13,7 +14,11 @@ namespace U3ActRegistroDeActividadesMaui.Services
             {
                 BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api/Departamentos/")
             };
-            var token = SecureStorage.GetAsync("tkn").Result;
+            ActualizarToken();
+        }
+        public async void ActualizarToken()
+        {
+            var token = await SecureStorage.GetAsync("tkn");
             if (string.IsNullOrEmpty(token))
             {
                 throw new UnauthorizedAccessException("No autorizado");
@@ -22,22 +27,23 @@ namespace U3ActRegistroDeActividadesMaui.Services
         }
 
         #region Read
-        public async Task<IEnumerable<DepartamentoDTO>> GetDepartamentos(int id)
+        public async Task<DepartamentoDTO> GetDepartamentos(int id)
         {
             try
             {
-                var response = await cliente.GetFromJsonAsync<List<DepartamentoDTO>>($"Actividades/{id}");
-
-                if (response != null)
+                var response = await cliente.GetAsync($"Actividades/{id}");
+                if (response.IsSuccessStatusCode)
                 {
-                    return response.AsEnumerable();
+                    var json = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<DepartamentoDTO>(json);
+                    return result ?? new();
                 }
             }
             catch (Exception e)
             {
                 await Shell.Current.DisplayAlert("Error", $"Request error: {e.Message}", "Ok");
             }
-            return [];
+            return new();
         }
         #endregion
         #region Create

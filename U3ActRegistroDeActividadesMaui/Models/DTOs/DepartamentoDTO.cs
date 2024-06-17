@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SQLite;
-using TableAttribute = SQLite.TableAttribute;
+﻿using TableAttribute = SQLite.TableAttribute;
 
 namespace U3ActRegistroDeActividadesMaui.Models.DTOs
 {
@@ -13,9 +6,11 @@ namespace U3ActRegistroDeActividadesMaui.Models.DTOs
     public class DepartamentoDTO
     {
         public int Id { get; set; }
-        public string Nombre { get; set; } = null!;
+        public string Departamento { get; set; } = null!;
         public string Username { get; set; } = null!;
         public string Password { get; set; } = null!;
         public int? IdSuperior { get; set; }
+        public IEnumerable<ActividadDTO> Actividades { get; set; } = null!;
+        public IEnumerable<DepartamentoDTO> Subordinados { get; set; } = null!;
     }
 }
