@@ -45,8 +45,17 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
 
         public void Delete(int id)
         {
-            context.Delete(id);
+            var departamento = context.Find<Departamentos>(id);
+            if (departamento != null)
+            {
+                context.Delete(departamento);
+            }
         }
+
+        //public void Delete(int id)
+        //{
+        //    context.Delete(id);
+        //}
         public void DeleteAll()
         {
             context.DeleteAll<Departamentos>();

@@ -46,7 +46,7 @@
             <SwipeView>
                 <SwipeView.RightItems>
                     <SwipeItems>
-                        <SwipeItem Text="Editar" BackgroundColor="LightGreen" />
+                        <SwipeItem Text="Editar" BackgroundColor="LightGreen" Command="{Binding VerEditarDepartamento}"/>
                         <SwipeItem Text="Eliminar" BackgroundColor="LightPink" />
                     </SwipeItems>
                 </SwipeView.RightItems>
@@ -55,8 +55,8 @@
                         <DataTemplate>
                             <Frame>
                                 <Grid Margin="10" BackgroundColor="LightBlue">
-                                    <Label Text="{Binding Nombre}" FontAttributes="Bold"></Label>
-                                    <Label Grid.Column="1" Text="{Binding Actividades.Count}" FontAttributes="Bold"></Label>
+                                    <Label Text="{Binding Nombre}" FontAttributes="Bold" TextColor="Black"></Label>
+                                    <Label Grid.Column="1" Text="{Binding Actividades.Count}" FontAttributes="Bold"  TextColor="Black"></Label>
                                 </Grid>
                             </Frame>
                         </DataTemplate>

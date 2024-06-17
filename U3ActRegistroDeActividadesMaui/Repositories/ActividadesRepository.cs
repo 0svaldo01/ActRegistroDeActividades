@@ -11,7 +11,7 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
         {
             string ruta = FileSystem.AppDataDirectory + "/actividades.db3";
             context = new SQLiteConnection(ruta);
-            //context.CreateTable<Actividades>();
+            context.CreateTable<Actividades>();
         }
 
         public void Insert(Actividades A)

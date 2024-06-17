@@ -92,7 +92,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                     Estado = actividad.Estado,
                                     FechaActualizacion = actividad.FechaActualizacion,
                                     FechaCreacion = actividad.FechaCreacion,
-                                    FechaRealizacion = actividad.FechaRealizacion,
+                                    FechaRealizacion = (DateTime)actividad.FechaRealizacion,
                                     IdDepartamento = actividad.IdDepartamento,
                                     Titulo = actividad.Titulo
                                 };
@@ -117,7 +117,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                 FechaActualizacion = act.FechaActualizacion,
                                 IdDepartamento = act.IdDepartamento,
                                 FechaCreacion = act.FechaCreacion,
-                                FechaRealizacion = act.FechaRealizacion,
+                                FechaRealizacion = (DateTime)act.FechaRealizacion,
                                 Titulo = act.Titulo
                             }).ToList()
                         };
@@ -133,7 +133,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                     Estado = actividad.Estado,
                                     FechaActualizacion = actividad.FechaActualizacion,
                                     FechaCreacion = actividad.FechaCreacion,
-                                    FechaRealizacion = actividad.FechaRealizacion,
+                                    FechaRealizacion = (DateTime)actividad.FechaRealizacion,
                                     IdDepartamento = actividad.IdDepartamento,
                                     Titulo = actividad.Titulo,
                                 };
@@ -156,7 +156,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                     Estado = actividad.Estado,
                                     FechaActualizacion = actividad.FechaActualizacion,
                                     FechaCreacion = actividad.FechaCreacion,
-                                    FechaRealizacion = actividad.FechaRealizacion,
+                                    FechaRealizacion = (DateTime)actividad.FechaRealizacion,
                                     IdDepartamento = actividad.IdDepartamento,
                                     Titulo = actividad.Titulo,
                                 };
@@ -194,6 +194,12 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
 
             await Shell.Current.GoToAsync("//AgregarDepView");
         }
+        [RelayCommand]
+        public async Task VerEditarDepartamento()
+        {
+
+            await Shell.Current.GoToAsync("//EditarDepView");
+        }
         #endregion
         #region Comandos
         #region Create
@@ -208,6 +214,12 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                     if (resultado.IsValid)
                     {
                         await service.Insert(Departamento);
+                        // Esperar un momento para asegurarse de que los datos se han guardado en el servidor
+                        await Task.Delay(500);
+
+                        // Actualizar los departamentos después de agg
+                        var id = await GetToken();
+                        await HacerPeticionGet(id);
                         ActualizarDepartamentos();
                         Cancelar();
                     }

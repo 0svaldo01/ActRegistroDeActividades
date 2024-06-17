@@ -32,6 +32,11 @@
         ContentTemplate="{DataTemplate views:AgregarDepView}"
         Route="AgregarDepView"
         Title="Agregar departamento"></ShellContent>
+    
+    <ShellContent
+      ContentTemplate="{DataTemplate views:EditarDepView}"
+      Route="EditarDepView"
+      Title="Editar departamento"></ShellContent>
 
     <ShellContent
         ContentTemplate="{DataTemplate views:EditarView}" Route="EditarAct"

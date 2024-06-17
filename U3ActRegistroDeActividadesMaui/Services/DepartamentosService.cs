@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 
 namespace U3ActRegistroDeActividadesMaui.Services
@@ -48,18 +49,60 @@ namespace U3ActRegistroDeActividadesMaui.Services
         }
         #endregion
         #region Create
+
         public async Task Insert(DepartamentoDTO dto)
         {
             try
             {
-                var response = await cliente.PostAsJsonAsync("Agregar", dto);
-                response.EnsureSuccessStatusCode();
+                var requestBody = new
+                {
+                    id = dto.Id,
+                    nombre = dto.Departamento,
+                    username = dto.Username,
+                    password = dto.Password,
+                    idSuperior = dto.IdSuperior
+                };
+
+                var jsonContent = JsonConvert.SerializeObject(requestBody);
+                Console.WriteLine($"Request JSON: {jsonContent}");
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await cliente.PostAsync("Agregar", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Response Status: {response.StatusCode}");
+                    Console.WriteLine($"Response Error: {errorMessage}");
+                    await Shell.Current.DisplayAlert("Error", $"Error al enviar la solicitud: {response.StatusCode} - {errorMessage}", "Aceptar");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Error al enviar la solicitud: {ex.Message}", "Aceptar");
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
             }
         }
+
+        //public async Task Insert(DepartamentoDTO dto)
+        //{
+        //    try
+        //    {
+        //        var response = await cliente.PostAsJsonAsync("Agregar", dto);
+        //        response.EnsureSuccessStatusCode();
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        await Shell.Current.DisplayAlert("Error", $"Error al enviar la solicitud: {ex.Message}", "Aceptar");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
+        //    }
+        //}
         #endregion
         #region Update
         public async Task Update(DepartamentoDTO dto)

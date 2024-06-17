@@ -108,6 +108,9 @@
 	  <MauiXaml Update="Views\Actividades\EditarView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Departamentos\EditarDepView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ListaView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
