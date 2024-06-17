@@ -31,6 +31,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
+                //Puedes usar esto como ejemplo para hacer peticiones a la API
                 var response = await cliente.GetAsync($"Actividades/{id}");
                 if (response.IsSuccessStatusCode)
                 {

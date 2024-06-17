@@ -170,7 +170,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 }
             }
         }
-
         void ActualizarDepartamentos()
         {
             Departamentos.Clear();
