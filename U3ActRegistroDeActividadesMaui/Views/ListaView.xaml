@@ -43,22 +43,22 @@
 
         <CollectionView ItemsSource="{Binding Departamentos}" 
                         SelectionMode="Single" 
-                        SelectedItem="{Binding DepartamentoSeleccionado}">
+                        SelectedItem="{Binding DepartamentoSeleccionado}"
+                        Margin="10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems>
                                 <SwipeItem Text="Editar" BackgroundColor="LightGreen" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DepartamentosViewModel}}, Path=VerEditarDepartamentoCommand}" CommandParameter="{Binding .}"/>
-                                <SwipeItem Text="Eliminar" BackgroundColor="LightPink" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DepartamentosViewModel}}, Path=EliminarDepartamentoCommand}" CommandParameter="{Binding .}"/>
+                                <SwipeItem Text="Eliminar" BackgroundColor="LightPink" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DepartamentosViewModel}}, Path=VerEliminarDepartamentoCommand}" CommandParameter="{Binding .}"/>
                             </SwipeItems>
                         </SwipeView.RightItems>
+                        
                         <Frame>
-
                             <Grid Margin="10" ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"  Text="{Binding Nombre}" FontAttributes="Bold" TextColor="Black" />
                                 <Label Grid.Column="1" Text="{Binding Actividades.Count}" FontAttributes="Bold" TextColor="Black" />
-                              
                             </Grid>
                         </Frame>
                     </SwipeView>

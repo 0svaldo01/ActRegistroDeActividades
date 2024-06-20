@@ -239,7 +239,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                         await service.Insert(Departamento);
                         // Esperar un momento para asegurarse de que los datos se han guardado en el servidor
                         await Task.Delay(500);
-
                         // Actualizar los departamentos después de agg
                         var id = await GetToken();
                         await HacerPeticionGet(id);
@@ -259,7 +258,36 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         }
         #endregion
         #region Update
-        //Hacer una peticion Put a la api
+        [RelayCommand]
+        public async Task Editar(Departamentos departamento)
+        {
+            try
+            {
+                if (Departamento != null)
+                {
+                    var resultado = validator.Validate(Departamento);
+                    if (resultado.IsValid)
+                    {
+                        await service.Update(Departamento);
+                        // Esperar un momento para asegurarse de que los datos se han guardado en el servidor
+                        await Task.Delay(500);
+                        // Actualizar los departamentos después de agg
+                        var id = await GetToken();
+                        await HacerPeticionGet(id);
+                        ActualizarDepartamentos();
+                        Cancelar();
+                    }
+                    else
+                    {
+                        Error = string.Join("\n", resultado.Errors.Select(x => x.ErrorMessage));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
+        }
         #endregion
         #region Delete
         //Hacer una peticion Delete a la api
