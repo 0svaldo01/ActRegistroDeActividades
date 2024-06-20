@@ -6,7 +6,7 @@ namespace U3ActRegistroDeActividadesMaui.Models.Entities
     [Table("Departamentos")]
     public class Departamentos
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         [NotNull]
         public string Nombre { get; set; } = null!;

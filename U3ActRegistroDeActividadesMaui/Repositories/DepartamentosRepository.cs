@@ -5,7 +5,7 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
 {
     public class DepartamentosRepository
     {
-        //Conexion Sqlite
+        //Conexión Sqlite
         private readonly SQLiteConnection context;
 
         public DepartamentosRepository()

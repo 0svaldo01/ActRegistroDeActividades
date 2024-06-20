@@ -68,7 +68,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             {
                 if (departamentosServer.Subordinados.Any())
                 {
-                    departamentosRepository.DeleteAll();
                     //Agregar en local
                     foreach (var departamentoDTO in departamentosServer.Subordinados)
                     {
@@ -82,7 +81,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                         };
                         if (!Departamentos.Contains(entity))
                         {
-                            departamentosRepository.Insert(entity);
+                            departamentosRepository.InsertOrReplace(entity);
                             foreach (var actividad in departamentoDTO.Actividades)
                             {
                                 Actividades act = new()
@@ -92,11 +91,18 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                     Estado = actividad.Estado,
                                     FechaActualizacion = actividad.FechaActualizacion,
                                     FechaCreacion = actividad.FechaCreacion,
-                                    FechaRealizacion = (DateTime)actividad.FechaRealizacion,
+                                    //Convertimos el DateOnly a datetime para guardarlo localmente
+                                    FechaRealizacion = actividad.FechaRealizacion != null ?
+                                    actividad.FechaRealizacion.Value.ToDateTime(TimeOnly.MinValue)
+                                    : DateTime.MinValue,
                                     IdDepartamento = actividad.IdDepartamento,
                                     Titulo = actividad.Titulo
                                 };
-                                actividadesRepository.Insert(act);
+                                var anterior = actividadesRepository.Get(act.Id);
+                                if (anterior == null)
+                                {
+                                    actividadesRepository.InsertOrReplace(act);
+                                }
                             }
                         }
                     }
@@ -117,7 +123,9 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                 FechaActualizacion = act.FechaActualizacion,
                                 IdDepartamento = act.IdDepartamento,
                                 FechaCreacion = act.FechaCreacion,
-                                FechaRealizacion = (DateTime)act.FechaRealizacion,
+                                FechaRealizacion = act.FechaRealizacion != null ?
+                                    act.FechaRealizacion.Value.ToDateTime(TimeOnly.MinValue)
+                                    : DateTime.MinValue,
                                 Titulo = act.Titulo
                             }).ToList()
                         };
@@ -133,11 +141,16 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                     Estado = actividad.Estado,
                                     FechaActualizacion = actividad.FechaActualizacion,
                                     FechaCreacion = actividad.FechaCreacion,
-                                    FechaRealizacion = (DateTime)actividad.FechaRealizacion,
-                                    IdDepartamento = actividad.IdDepartamento,
+                                    FechaRealizacion = actividad.FechaRealizacion != null ?
+                                    actividad.FechaRealizacion.Value.ToDateTime(TimeOnly.MinValue)
+                                    : DateTime.MinValue,
                                     Titulo = actividad.Titulo,
                                 };
-                                actividadesRepository.Update(act);
+                                var anterior = actividadesRepository.Get(act.Id);
+                                if (anterior != null)
+                                {
+                                    actividadesRepository.Update(act);
+                                }
                             }
                         }
                     }
@@ -156,7 +169,9 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                                     Estado = actividad.Estado,
                                     FechaActualizacion = actividad.FechaActualizacion,
                                     FechaCreacion = actividad.FechaCreacion,
-                                    FechaRealizacion = (DateTime)actividad.FechaRealizacion,
+                                    FechaRealizacion = actividad.FechaRealizacion != null ?
+                                    actividad.FechaRealizacion.Value.ToDateTime(TimeOnly.MinValue)
+                                    : DateTime.MinValue,
                                     IdDepartamento = actividad.IdDepartamento,
                                     Titulo = actividad.Titulo,
                                 };
@@ -184,27 +199,28 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         [RelayCommand]
         public void Cancelar()
         {
-            Departamento = new();
-            //Error = "";
+            DepartamentoSeleccionado = new();
+            Error = "";
             Shell.Current.GoToAsync("//ListaDep");
         }
         [RelayCommand]
         public async Task VerAgregarDepartamento()
         {
 
+            DepartamentoSeleccionado = new();
+            Error = "";
             await Shell.Current.GoToAsync("//AgregarDepView");
         }
         [RelayCommand]
         public async Task VerEditarDepartamento()
         {
-
             await Shell.Current.GoToAsync("//EditarDepView");
         }
         #endregion
         #region Comandos
         #region Create
         [RelayCommand]
-        public async Task Agregar()
+        public async Task Agregar(Departamentos departamento)
         {
             try
             {
@@ -234,9 +250,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 Error = ex.Message;
             }
         }
-        #endregion
-        #region Read
-        //Hacer una peticion Get a la api
         #endregion
         #region Update
         //Hacer una peticion Put a la api

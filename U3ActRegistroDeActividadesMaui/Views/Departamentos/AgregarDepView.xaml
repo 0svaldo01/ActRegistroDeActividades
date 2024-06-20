@@ -25,15 +25,15 @@
             <BoxView HeightRequest="1" Color="#277B3F" HorizontalOptions="FillAndExpand" Margin="0,0,0,40" />
             <Label Text="Nombre del departamento:"></Label>
             <Frame BorderColor="Gray" Margin="0,5" Padding="0">
-                <Entry Text="{Binding Departamento.Departamento}" Margin="2" TextColor="Black" Background="White"></Entry>
+                <Entry Text="{Binding DepartamentoSeleccionado.Nombre}" Margin="2" TextColor="Black" Background="White"></Entry>
             </Frame>
             <Label Text="Correo eléctronico:"></Label>
             <Frame BorderColor="Gray" Margin="0,5" Padding="0">
-                <Entry Text="{Binding Departamento.Username}" Keyboard="Email" Margin="2" TextColor="Black" Background="White"></Entry>
+                <Entry Text="{Binding DepartamentoSeleccionado.Username}" Keyboard="Email" Margin="2" TextColor="Black" Background="White"></Entry>
             </Frame>
             <Label Text="Contraseña:"></Label>
             <Frame BorderColor="Gray" Margin="0,5" Padding="0">
-                <Entry Text="{Binding Departamento.Password}" IsPassword="True" Margin="2" TextColor="Black" Background="White"></Entry>
+                <Entry Text="{Binding DepartamentoSeleccionado.Password}" IsPassword="True" Margin="2" TextColor="Black" Background="White"></Entry>
             </Frame>
             <Label Text="{Binding Error}" Margin="0,0,0,20" TextColor="red" HorizontalOptions="Center"></Label>
             <HorizontalStackLayout HorizontalOptions="Center">
