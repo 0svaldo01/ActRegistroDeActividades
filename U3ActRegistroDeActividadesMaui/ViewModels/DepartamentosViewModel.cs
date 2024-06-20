@@ -206,14 +206,21 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         [RelayCommand]
         public async Task VerAgregarDepartamento()
         {
-
             DepartamentoSeleccionado = new();
             Error = "";
             await Shell.Current.GoToAsync("//AgregarDepView");
         }
         [RelayCommand]
+        public async Task VerEliminarDepartamento()
+        {
+            DepartamentoSeleccionado = new();
+            Error = "";
+            await Shell.Current.GoToAsync("//EliminarDepView");
+        }
+        [RelayCommand]
         public async Task VerEditarDepartamento()
         {
+            Error = "";
             await Shell.Current.GoToAsync("//EditarDepView");
         }
         #endregion

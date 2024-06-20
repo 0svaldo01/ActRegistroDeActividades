@@ -14,15 +14,26 @@ namespace U3ActRegistroDeActividadesMaui.Services
             {
                 BaseAddress = new Uri("http://u3eqpo1actapi.com/api/Actividades/")
             };
+            ActualizarToken();
         }
-        public void ActualizarToken()
+        //Obtencion de token y validación de peticiones
+        public async void ActualizarToken()
         {
-            var token = SecureStorage.GetAsync("tkn").Result;
+            var token = await SecureStorage.GetAsync("tkn");
             if (string.IsNullOrEmpty(token))
             {
                 throw new UnauthorizedAccessException("No autorizado");
             }
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+        //Cerrar sesion si la peticion http no es valida
+        public async Task CerrarSesion()
+        {
+            await Shell.Current.DisplayAlert("Credenciales expiradas", "Inicia sesión nuevamente", "Aceptar");
+            //eliminar token
+            SecureStorage.Remove("tkn");
+            //Enviar de regreso al login
+            await Shell.Current.GoToAsync("/Login");
         }
         #region Read
         public async Task<ActividadDTO> GetActividad(int id)
@@ -35,6 +46,10 @@ namespace U3ActRegistroDeActividadesMaui.Services
                     return response;
                 }
             }
+            catch (HttpRequestException)
+            {
+                await CerrarSesion();
+            }
             catch (Exception e)
             {
                 await Shell.Current.DisplayAlert("Error", $"Request error: {e.Message}", "Ok");
@@ -45,7 +60,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
-                ActualizarToken();
                 var response = await cliente.GetAsync("/Actividades");
                 if (response.IsSuccessStatusCode)
                 {
@@ -53,6 +67,10 @@ namespace U3ActRegistroDeActividadesMaui.Services
                     var result = JsonConvert.DeserializeObject<IEnumerable<ActividadDTO>>(json);
                     return result;
                 }
+            }
+            catch (HttpRequestException)
+            {
+                await CerrarSesion();
             }
             catch (Exception ex)
             {
@@ -72,6 +90,14 @@ namespace U3ActRegistroDeActividadesMaui.Services
                     return result;
                 }
             }
+            catch (HttpRequestException excepción)
+            {
+
+                if (excepción.HttpRequestError == HttpRequestError.UserAuthenticationError)
+                {
+                    await CerrarSesion();
+                }
+            }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
@@ -87,6 +113,14 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 var response = await cliente.PostAsJsonAsync("Agregar", dto);
                 response.EnsureSuccessStatusCode();
             }
+            catch (HttpRequestException excepción)
+            {
+
+                if (excepción.HttpRequestError == HttpRequestError.UserAuthenticationError)
+                {
+                    await CerrarSesion();
+                }
+            }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
@@ -101,6 +135,14 @@ namespace U3ActRegistroDeActividadesMaui.Services
                 var response = await cliente.PutAsJsonAsync("Editar", dto);
                 response.EnsureSuccessStatusCode();
             }
+            catch (HttpRequestException excepción)
+            {
+
+                if (excepción.HttpRequestError == HttpRequestError.UserAuthenticationError)
+                {
+                    await CerrarSesion();
+                }
+            }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
@@ -114,6 +156,14 @@ namespace U3ActRegistroDeActividadesMaui.Services
             {
                 var response = await cliente.DeleteAsync($"/Eliminar/{dto.Id}");
                 response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException excepción)
+            {
+
+                if (excepción.HttpRequestError == HttpRequestError.UserAuthenticationError)
+                {
+                    await CerrarSesion();
+                }
             }
             catch (Exception ex)
             {
