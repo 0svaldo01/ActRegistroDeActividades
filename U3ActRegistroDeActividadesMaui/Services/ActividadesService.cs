@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
+
 
 namespace U3ActRegistroDeActividadesMaui.Services
 {
@@ -106,8 +108,18 @@ namespace U3ActRegistroDeActividadesMaui.Services
         }
         #endregion
         #region Create
+       
         public async Task Insert(ActividadDTO dto)
         {
+            var tokenobtenido = SecureStorage.GetAsync("tkn");
+            var handler = new JwtSecurityTokenHandler();
+
+            //var jsonToken = handler.ReadToken(tokenobtenido) as JwtSecurityToken;
+            //if (tokenobtenido != null)
+            //{
+                //var idClaim = jsonToken.Claims.FirstOrDefault(claim => claim.Type == "id");
+            //}
+
             try
             {
                 var response = await cliente.PostAsJsonAsync("Agregar", dto);

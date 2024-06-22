@@ -223,6 +223,12 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             Error = "";
             await Shell.Current.GoToAsync("//EditarDepView");
         }
+        [RelayCommand]
+        public async Task VerAggActividad()
+        {
+            Error = "";
+            await Shell.Current.GoToAsync("//AgregarAct");
+        }
         #endregion
         #region Comandos
         #region Create

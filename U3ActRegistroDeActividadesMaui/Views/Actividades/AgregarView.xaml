@@ -27,6 +27,9 @@
             <Frame BorderColor="Gray" Margin="0,5" Padding="0">
                 <DatePicker TextColor="Black" Format="dd/MM/yyyy" ></DatePicker>
             </Frame>
+            <!--<Frame>
+                <DatePicker x:Name="FechaCreacionPicker" Date="{x:Static system:DateTime.Now}" ></DatePicker>
+            </Frame>-->
             <Label Text="Descripción de la actividad:"></Label>
             <Frame BorderColor="Gray" Margin="0,5" Padding="0">
                 <Editor TextColor="Black" HeightRequest="150"></Editor>
@@ -34,6 +37,8 @@
             <Label Text="Errores" Margin="0,0,0,20" TextColor="red" HorizontalOptions="Center"></Label>
             <Button Text="Agregar" BackgroundColor="#52BC70" TextColor="White" WidthRequest="150" />
 
+            
+            
         </VerticalStackLayout>
     </Frame>
    
