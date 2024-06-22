@@ -188,7 +188,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         void ActualizarDepartamentos()
         {
             Departamentos.Clear();
-            //Traer la base de datos local
+            //Traer la base de da   tos local
             foreach (var dep in departamentosRepository.GetAll())
             {
                 Departamentos.Add(dep);
