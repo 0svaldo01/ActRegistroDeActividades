@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="U3ActRegistroDeActividadesMaui.Views.ListaActView"
+             xmlns:vm="clr-namespace:U3ActRegistroDeActividadesMaui.ViewModels">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style TargetType="Frame">
+                <Setter Property="Margin" Value="10,5" />
+                <Setter Property="Padding" Value="10"></Setter>
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="Gray"></Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <vm:ActividadesViewModel></vm:ActividadesViewModel>
+    </ContentPage.BindingContext>
+
+
+    <VerticalStackLayout>
+        <HorizontalStackLayout>
+            <Button Text="Departamentos" BackgroundColor="#52BC70" TextColor="White" WidthRequest="140" Margin="10" 
+                    Command="{Binding VerListaDeDepartamentosCommand}"/>
+            <Button Text="+ Actividad" BackgroundColor="#52BC70" TextColor="White" WidthRequest="140" Margin="10"
+                HorizontalOptions="End" Command="{Binding VerAgregarActividadCommand}"/>
+        </HorizontalStackLayout>
+
+        <CollectionView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Editar" BackgroundColor="LightGreen" />
+                                <SwipeItem Text="Eliminar" BackgroundColor="LightPink" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Frame>
+                            <Grid Margin="10" ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"  Text="Apertura de conferencia" FontAttributes="Bold" TextColor="Black" />
+                                <Label Grid.Column="1" Text="20/05/2024" FontAttributes="Bold" TextColor="Black" />
+                            </Grid>
+                        </Frame>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

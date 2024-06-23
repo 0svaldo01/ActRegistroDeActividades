@@ -12,7 +12,6 @@
 
     <Shell.BindingContext>
         <viewmodels:ShellViewModel></viewmodels:ShellViewModel>
-        <!--<viewmodels:DepartamentosViewModel></viewmodels:DepartamentosViewModel>-->
     </Shell.BindingContext>
 
     <Shell.ToolbarItems>
@@ -24,7 +23,13 @@
         Route="ListaDep"
         Title="Lista de Departamentos">
     </ShellContent>
-    
+
+    <ShellContent 
+       ContentTemplate="{DataTemplate views:ListaActView}" 
+       Route="ListaAct"
+       Title="Lista de Actividades">
+    </ShellContent>
+
     <ShellContent
         ContentTemplate="{DataTemplate views:AgregarView}" Route="AgregarAct"
         Title="Agregar actividad"></ShellContent>
@@ -42,9 +47,5 @@
         ContentTemplate="{DataTemplate views:EditarView}" Route="EditarAct"
         Title="Editar actividad"></ShellContent>
     
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate views:Splashpage}"
-        Route="MainPage" />
 
 </Shell>

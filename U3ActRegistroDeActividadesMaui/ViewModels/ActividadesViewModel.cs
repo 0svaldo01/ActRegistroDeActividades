@@ -27,10 +27,18 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         private string error = "";
 
         [RelayCommand]
-        public async Task Nuevo()
+        public void VerListaDeDepartamentos()
+        {
+            Error = "";
+            Shell.Current.GoToAsync("//ListaAct");
+        }
+
+        [RelayCommand]
+        public void VerAgregarActividad()
         {
             Actividad = new();
-            await Shell.Current.GoToAsync("//AgregarAct");
+            Error = "";
+            Shell.Current.GoToAsync("//AgregarAct");
         }
 
         [RelayCommand]

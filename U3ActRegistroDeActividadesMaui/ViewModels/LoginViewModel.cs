@@ -30,7 +30,9 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 {
                     if (App.Current != null)
                     {
+                 
                         App.Current.MainPage = new AppShell();
+                        await Shell.Current.GoToAsync("//ListaAct");
                     }
                 }
                 else
