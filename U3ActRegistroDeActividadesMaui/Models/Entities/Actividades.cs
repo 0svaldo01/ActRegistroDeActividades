@@ -23,5 +23,13 @@ namespace U3ActRegistroDeActividadesMaui.Models.Entities
 
         [OneToMany(CascadeOperations = CascadeOperation.None)]
         public virtual Departamentos? IdDepartamentoNavigation { get; set; }
+        public Uri Imagen
+        {
+            get
+            {
+                var uri= new Uri("https://u3eqpo1actapi.labsystec.net/Images/" + Id.ToString() +".jpg?fecha=" + FechaActualizacion.ToString());
+                return uri;
+            }
+        }
     }
 }

@@ -20,35 +20,38 @@
     <ContentPage.BindingContext>
         <vm:ActividadesViewModel></vm:ActividadesViewModel>
     </ContentPage.BindingContext>
-
-
-    <VerticalStackLayout>
-        <HorizontalStackLayout>
+    <Grid RowDefinitions="Auto, *">
+        <HorizontalStackLayout >
             <Button Text="Departamentos" BackgroundColor="#52BC70" TextColor="White" WidthRequest="140" Margin="10" 
                     Command="{Binding VerListaDeDepartamentosCommand}"/>
             <Button Text="+ Actividad" BackgroundColor="#52BC70" TextColor="White" WidthRequest="140" Margin="10"
                 HorizontalOptions="End" Command="{Binding VerAgregarActividadCommand}"/>
         </HorizontalStackLayout>
+        <ScrollView Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Actividades}" EmptyView="No hay nada, trabucos">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Editar" BackgroundColor="LightGreen" />
+                                    <SwipeItem Text="Eliminar" BackgroundColor="LightPink" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame>
+                                <Grid RowDefinitions="Auto, *">
 
-        <CollectionView>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Editar" BackgroundColor="LightGreen" />
-                                <SwipeItem Text="Eliminar" BackgroundColor="LightPink" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <Frame>
-                            <Grid Margin="10" ColumnDefinitions="*,Auto">
-                                <Label Grid.Column="0"  Text="Apertura de conferencia" FontAttributes="Bold" TextColor="Black" />
-                                <Label Grid.Column="1" Text="20/05/2024" FontAttributes="Bold" TextColor="Black" />
-                            </Grid>
-                        </Frame>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+                                    <Grid Margin="10" ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"  Text="{Binding Titulo}" FontAttributes="Bold" TextColor="Black" />
+                                        <Label Grid.Column="1" Text="{Binding FechaRealizacion, StringFormat='{}{0:dd/MM/yyyy}'}" FontAttributes="Bold" TextColor="Black" />
+                                    </Grid>
+                                    <Image Grid.Row="1" Source="{Binding Imagen}"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
 </ContentPage>

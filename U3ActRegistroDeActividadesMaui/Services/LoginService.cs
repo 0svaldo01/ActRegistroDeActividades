@@ -13,13 +13,12 @@ namespace U3ActRegistroDeActividadesMaui.Services
         }
         public async Task<bool> Login(string username, string password)
         {
-            var content = new StringContent(JsonSerializer.Serialize(
-                new LoginDTO()
-                {
-                    correo = username,
-                    contraseña = password
-                }),
-                Encoding.UTF8, "application/json");
+            var data = new LoginDTO()
+            {
+                correo = username,
+                contraseña = password
+            };
+            var content = new StringContent(JsonSerializer.Serialize(data),Encoding.UTF8, "application/json");
 
             var response = await cliente.PostAsync("api/login", content);
 

@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
+using U3ActRegistroDeActividadesMaui.Models.Entities;
 
 
 namespace U3ActRegistroDeActividadesMaui.Services
@@ -14,7 +15,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             cliente = new()
             {
-                BaseAddress = new Uri("http://u3eqpo1actapi.com/api/Actividades/")
+                BaseAddress = new Uri("https://u3eqpo1actapi.labsystec.net/api/actividades/")
             };
             ActualizarToken();
         }
@@ -58,16 +59,46 @@ namespace U3ActRegistroDeActividadesMaui.Services
             }
             return new();
         }
-        public async Task<IEnumerable<ActividadDTO>?>? GetAll()
+        public async Task<IEnumerable<Actividades>?> GetAllRight()
         {
             try
             {
-                var response = await cliente.GetAsync("/Actividades");
+                if (cliente.DefaultRequestHeaders.Authorization == null)
+                {
+                    var token = await SecureStorage.GetAsync("tkn");
+                    cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
+                var response = await cliente.GetAsync("GetAll");
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<IEnumerable<ActividadDTO>>(json);
-                    return result;
+                    var actividades = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<Actividades>>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return actividades;
+                }
+            }
+            catch { }
+            return null;
+        }
+        public async Task<IEnumerable<ActividadDTO>?> GetAll()
+        {
+            try
+            {
+                //Primero, crear un HttpRequestMessage
+                //HttpRequestMessage rm = new();
+                ////Se le da el tipo de peticion
+                //rm.Method = HttpMethod.Get;
+                ////Se le da el token
+                //var token = await SecureStorage.GetAsync("tkn");
+                //rm.Headers.Add("Authorization", $"Bearer {token}");
+
+                //Si llega a tener contenido la peticion
+                //var json = System.Text.Json.JsonSerializer.Serialize()
+                //rm.Content = new StringContent("", Encoding.UTF8, "");
+                var response = await cliente.GetAsync("GetAll");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var actividades = System.Text.Json.JsonSerializer.Deserialize<Actividades>(json);
                 }
             }
             catch (HttpRequestException)
@@ -108,7 +139,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         }
         #endregion
         #region Create
-       
+
         public async Task Insert(ActividadDTO dto)
         {
             var tokenobtenido = SecureStorage.GetAsync("tkn");
@@ -117,7 +148,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
             //var jsonToken = handler.ReadToken(tokenobtenido) as JwtSecurityToken;
             //if (tokenobtenido != null)
             //{
-                //var idClaim = jsonToken.Claims.FirstOrDefault(claim => claim.Type == "id");
+            //var idClaim = jsonToken.Claims.FirstOrDefault(claim => claim.Type == "id");
             //}
 
             try

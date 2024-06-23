@@ -19,15 +19,15 @@
     </Shell.ToolbarItems>
 
     <ShellContent 
-        ContentTemplate="{DataTemplate views:ListaView}" 
-        Route="ListaDep"
-        Title="Lista de Departamentos">
+     ContentTemplate="{DataTemplate views:ListaActView}" 
+     Route="ListaAct"
+     Title="Lista de Actividades">
     </ShellContent>
 
     <ShellContent 
-       ContentTemplate="{DataTemplate views:ListaActView}" 
-       Route="ListaAct"
-       Title="Lista de Actividades">
+        ContentTemplate="{DataTemplate views:ListaView}" 
+        Route="ListaDep"
+        Title="Lista de Departamentos">
     </ShellContent>
 
     <ShellContent

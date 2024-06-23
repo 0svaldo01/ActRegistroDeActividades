@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using U3ActRegistroDeActividadesMaui.Helpers;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 using U3ActRegistroDeActividadesMaui.Models.Validators;
@@ -14,10 +15,41 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
 
         private readonly ActividadesService service = new();
         private readonly ActividadDTOValidator validador = new();
-
+        private readonly ActividadesService actividadesService;
         public ActividadesViewModel()
         {
+            var service = IPlatformApplication.Current.Services.GetService<ActividadesService>() ?? new();
+            this.actividadesService = service;
+
             Actividades.Clear();
+            if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+            {
+                _ = CargarActividades();
+            }
+            else
+            {
+                //Cargar actividades de serializacion
+                var acts = ActividadesSerializerHelper.Deserializar();
+                foreach (var item in acts)
+                {
+                    Actividades.Add(item);
+                }
+            }
+        }
+        async Task CargarActividades()
+        {
+            Actividades.Clear();
+            var acts = await actividadesService.GetAllRight();
+            if (acts != null)
+            {
+                foreach (var item in acts)
+                {
+                    Actividades.Add(item);
+                }
+                //Serializar aqui
+                ActividadesSerializerHelper.Serializar(Actividades);
+            }
+            await Task.CompletedTask;
         }
 
         [ObservableProperty]
@@ -32,7 +64,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             Error = "";
             Shell.Current.GoToAsync("//ListaAct");
         }
-
         [RelayCommand]
         public void VerAgregarActividad()
         {
@@ -40,7 +71,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             Error = "";
             Shell.Current.GoToAsync("//AgregarAct");
         }
-
         [RelayCommand]
         public async Task Cancelar()
         {
@@ -48,7 +78,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             Error = "";
             await Shell.Current.GoToAsync("//ListaAct");
         }
-
         [RelayCommand]
         public async Task Agregar()
         {
@@ -87,7 +116,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 Error = ex.Message;
             }
         }
-
         [RelayCommand]
         public async Task Editar()
         {
@@ -158,7 +186,6 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         //{
         //    var conexion = Connectivity.NetworkAccess;
         //    return conexion == NetworkAccess.Internet;
-
         //}
     }
 }
