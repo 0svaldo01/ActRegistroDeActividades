@@ -42,7 +42,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         private async void Iniciar()
         {
             var id = await GetToken();
-            await HacerPeticionGet(id);
+            await HacerPeticionGet();
             //Id Token 97
             //IdSuperior 97 => 1
         }
@@ -60,16 +60,16 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             }
             return 0;
         }
-        private async Task HacerPeticionGet(int id)
+        private async Task HacerPeticionGet()
         {
             //Obtener los departamentos de la API
-            var departamentosServer = await service.GetDepartamentos(id);
-            if (departamentosServer.Id > 0)
+            var departamentosServer = await service.GetAll();
+            if (departamentosServer.Count > 0)
             {
-                if (departamentosServer.Subordinados.Any())
+                if (departamentosServer.Count > 0)
                 {
                     //Agregar en local
-                    foreach (var departamentoDTO in departamentosServer.Subordinados)
+                    foreach (var departamentoDTO in departamentosServer)
                     {
                         Departamentos entity = new()
                         {
@@ -77,7 +77,21 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                             IdSuperior = departamentoDTO.IdSuperior,
                             Nombre = departamentoDTO.Departamento,
                             Username = departamentoDTO.Username,
-                            Password = departamentoDTO.Password
+                            Password = departamentoDTO.Password,
+                            Actividades = departamentoDTO.Actividades.Select(act => new Actividades()
+                            {
+                                Id = act.Id,
+                                Descripcion = act.Descripcion,
+                                Estado = act.Estado,
+                                FechaActualizacion = act.FechaActualizacion,
+                                FechaCreacion = act.FechaCreacion,
+                                //Convertimos el DateOnly a datetime para guardarlo localmente
+                                FechaRealizacion = act.FechaRealizacion != null ?
+                                    act.FechaRealizacion.Value.ToDateTime(TimeOnly.MinValue)
+                                    : DateTime.MinValue,
+                                IdDepartamento = act.IdDepartamento,
+                                Titulo = act.Titulo
+                            }).ToList()
                         };
                         if (!Departamentos.Contains(entity))
                         {
@@ -107,7 +121,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                         }
                     }
                     //Editar en local
-                    foreach (var departamentoDTO in departamentosServer.Subordinados)
+                    foreach (var departamentoDTO in departamentosServer)
                     {
                         Departamentos entity = new()
                         {
@@ -155,7 +169,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                         }
                     }
                     //Eliminar en local
-                    foreach (var departamentoDTO in departamentosServer.Subordinados)
+                    foreach (var departamentoDTO in departamentosServer)
                     {
                         if (Departamentos.FirstOrDefault(x => x.Id == departamentoDTO.Id) != null)
                         {
@@ -247,7 +261,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                         await Task.Delay(500);
                         // Actualizar los departamentos después de agg
                         var id = await GetToken();
-                        await HacerPeticionGet(id);
+                        await HacerPeticionGet();
                         ActualizarDepartamentos();
                         Cancelar();
                     }
@@ -279,7 +293,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                         await Task.Delay(500);
                         // Actualizar los departamentos después de agg
                         var id = await GetToken();
-                        await HacerPeticionGet(id);
+                        await HacerPeticionGet();
                         ActualizarDepartamentos();
                         Cancelar();
                     }

@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 
@@ -153,11 +152,7 @@ namespace U3ActRegistroDeActividadesMaui.Services
         {
             try
             {
-                var json = JsonConvert.SerializeObject(dto);
-                StringContent st = new(json, Encoding.UTF8, "application/json");
-                var response = await cliente.PostAsync("Agregar", st);
-
-                //var response = await cliente.PostAsJsonAsync("Agregar",dto);
+                var response = await cliente.PostAsJsonAsync($"Departamento/{dto.IdDepartamento}/Agregar", dto);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException excepción)

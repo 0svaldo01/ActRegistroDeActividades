@@ -53,17 +53,15 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             }
             await Task.CompletedTask;
         }
-
         [ObservableProperty]
         private ActividadDTO? actividad = new();
-
         [ObservableProperty]
         private string error = "";
         [RelayCommand]
-        public void VerListaDeDepartamentos()
+        public async Task VerListaDeDepartamentos()
         {
             Error = "";
-            Shell.Current.GoToAsync("//ListaAct");
+            await Shell.Current.GoToAsync("//ListaDep");
         }
         [RelayCommand]
         public void VerAgregarActividad()
@@ -91,6 +89,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         {
             Error = "";
             await Shell.Current.GoToAsync("//ListaAct");
+            await CargarActividades();
         }
         [RelayCommand]
         public async Task Agregar()
@@ -195,6 +194,12 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                             await service.Insert(Actividad);
                         }
                         //Regresar a la vista anterior
+                        await Cancelar();
+                    }
+                    else if (string.IsNullOrWhiteSpace(Actividad.Titulo)
+                        && string.IsNullOrWhiteSpace(Actividad.Descripcion)
+                        && string.IsNullOrWhiteSpace(Actividad.Imagen))
+                    {
                         await Cancelar();
                     }
                     else

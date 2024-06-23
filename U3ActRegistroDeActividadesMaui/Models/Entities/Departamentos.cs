@@ -12,8 +12,7 @@ namespace U3ActRegistroDeActividadesMaui.Models.Entities
         public string Nombre { get; set; } = null!;
         [NotNull]
         public string Username { get; set; } = null!;
-        [NotNull]
-        public string Password { get; set; } = null!;
+        public string? Password { get; set; } = null!;
 
         public int? IdSuperior { get; set; }
 

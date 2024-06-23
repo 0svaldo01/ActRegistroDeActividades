@@ -7,7 +7,6 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
     {
         //Conexión Sqlite
         private readonly SQLiteConnection context;
-
         public DepartamentosRepository()
         {
             //Base de datos local
@@ -27,22 +26,18 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
             return context.Table<Departamentos>()
                 .OrderBy(x => x.Nombre);
         }
-
         public Departamentos? Get(int id)
         {
             return context.Find<Departamentos>(id);
         }
-
         public void InsertOrReplace(Departamentos D)
         {
             context.InsertOrReplace(D);
         }
-
         public void Update(Departamentos D)
         {
             context.Update(D);
         }
-
         public void Delete(int id)
         {
             var departamento = context.Find<Departamentos>(id);
@@ -51,7 +46,6 @@ namespace U3ActRegistroDeActividadesMaui.Repositories
                 context.Delete(departamento);
             }
         }
-
         //public void Delete(int id)
         //{
         //    context.Delete(id);

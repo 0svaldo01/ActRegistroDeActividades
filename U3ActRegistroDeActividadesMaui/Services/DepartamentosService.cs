@@ -34,6 +34,31 @@ namespace U3ActRegistroDeActividadesMaui.Services
             SecureStorage.Remove("tkn");
         }
         #region Read
+        public async Task<List<DepartamentoDTO>> GetAll()
+        {
+            try
+            {
+                var response = await cliente.GetAsync("");
+
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var lista = JsonConvert.DeserializeObject<List<DepartamentoDTO>>(content);
+                return lista ?? [];
+
+            }
+            catch (HttpRequestException excepción)
+            {
+                if (excepción.HttpRequestError == HttpRequestError.UserAuthenticationError)
+                {
+                    await CerrarSesion();
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "Aceptar");
+            }
+            return [];
+        }
         public async Task<DepartamentoDTO> GetDepartamentos(int id)
         {
             try

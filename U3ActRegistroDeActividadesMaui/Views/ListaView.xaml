@@ -56,10 +56,9 @@
                         </SwipeView.RightItems>
                         
                         <Frame>
-                            <Grid Margin="10" ColumnDefinitions="*,Auto">
+                            <Grid Margin="10" ColumnDefinitions="*">
                                 <Label Grid.Column="0"  Text="{Binding Nombre}" FontAttributes="Bold" TextColor="Black" />
-                                <Label Grid.Column="1" Text="{Binding Actividades.Count}" FontAttributes="Bold" TextColor="Black" />
-                            </Grid>
+                           </Grid>
                         </Frame>
                     </SwipeView>
                 </DataTemplate>
