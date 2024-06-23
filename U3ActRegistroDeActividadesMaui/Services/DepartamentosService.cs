@@ -32,8 +32,6 @@ namespace U3ActRegistroDeActividadesMaui.Services
             await Shell.Current.DisplayAlert("Credenciales expiradas", "Inicia sesión nuevamente", "Aceptar");
             //eliminar token
             SecureStorage.Remove("tkn");
-            //Enviar de regreso al login
-            await Shell.Current.GoToAsync("/Login");
         }
         #region Read
         public async Task<DepartamentoDTO> GetDepartamentos(int id)

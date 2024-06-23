@@ -46,6 +46,8 @@
     <ShellContent
         ContentTemplate="{DataTemplate views:EditarView}" Route="EditarAct"
         Title="Editar actividad"></ShellContent>
-    
 
+    <ShellContent
+        ContentTemplate="{DataTemplate views:LoginView}" Route="Login"
+        Title="Editar actividad"></ShellContent>
 </Shell>

@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PerfectLoginApi.Helpers;
 using System.Collections.ObjectModel;
+using System.IdentityModel.Tokens.Jwt;
 using U3ActRegistroDeActividadesMaui.Helpers;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
@@ -12,10 +14,10 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
     public partial class ActividadesViewModel : ObservableObject
     {
         public ObservableCollection<Actividades> Actividades { get; set; } = [];
-
         private readonly ActividadesService service = new();
         private readonly ActividadDTOValidator validador = new();
         private readonly ActividadesService actividadesService;
+        public string Imagen = "";
         public ActividadesViewModel()
         {
             var service = IPlatformApplication.Current.Services.GetService<ActividadesService>() ?? new();
@@ -53,11 +55,10 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         }
 
         [ObservableProperty]
-        private ActividadDTO? actividad;
+        private ActividadDTO? actividad = new();
 
         [ObservableProperty]
         private string error = "";
-
         [RelayCommand]
         public void VerListaDeDepartamentos()
         {
@@ -71,10 +72,23 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             Error = "";
             Shell.Current.GoToAsync("//AgregarAct");
         }
+        public async Task<Dictionary<string, object>> GetToken()
+        {
+            var tkn = await SecureStorage.GetAsync("tkn");
+            if (!string.IsNullOrEmpty(tkn))
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(tkn);
+                var datos = jwtToken.Claims.ToDictionary(claim => claim.Type, claim => (object)claim.Value);
+                //var id = datos.FirstOrDefault(x => x.Key == "id").Value;
+                //var idDepto = int.Parse(id.ToString() ?? "");
+                return datos;
+            }
+            return null!;
+        }
         [RelayCommand]
         public async Task Cancelar()
         {
-            Actividad = null;
             Error = "";
             await Shell.Current.GoToAsync("//ListaAct");
         }
@@ -90,15 +104,27 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                     {
                         //buscar actividad anterior
                         var anterior = await service.GetActividad(Actividad.Id);
-                        Actividad.Estado = 1;
+                        Actividad.Estado = 1; //Publicado
+                        //buscar el token
+                        var token = await GetToken();
+                        //obtener id
+                        var idtoken = token.FirstOrDefault(x => x.Key == "id").Value;
+                        //convertir a int
+                        int id = int.Parse(idtoken.ToString() ?? "0");
+                        //Asignar id
+                        Actividad.IdDepartamento = id;
+                        Actividad.FechaActualizacion = DateTime.UtcNow;
+
                         //si existe
-                        if (anterior != null)
+                        if (anterior.Id != 0)
                         {
                             //se edita
                             await service.Update(Actividad);
                         }
                         else
                         {
+                            Actividad.Id = 0;
+                            Actividad.FechaCreacion = DateTime.UtcNow;
                             //se agrega si no existe
                             await service.Insert(Actividad);
                         }
@@ -156,16 +182,16 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                     {
                         //Obtendrá la version anterior de la actividad
                         var anterior = await service.Get(Actividad);
+
+                        Actividad.Estado = 0; //Borrador
                         //Editar si existe
                         if (anterior != null && anterior.Estado != 2)//Eliminado
                         {
-                            Actividad.Estado = 0; //Borrador
                             await service.Update(Actividad);
                         }
                         //Agregar si no existe
                         else
                         {
-                            Actividad.Estado = 0; //Borrador
                             await service.Insert(Actividad);
                         }
                         //Regresar a la vista anterior
@@ -187,5 +213,42 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
         //    var conexion = Connectivity.NetworkAccess;
         //    return conexion == NetworkAccess.Internet;
         //}
+        [RelayCommand]
+        public async Task BuscarImagen()
+        {
+            try
+            {
+                var result = await FilePicker.PickAsync(new PickOptions
+                {
+                    FileTypes = FilePickerFileType.Images,
+                    PickerTitle = "Selecciona una imagen"
+                });
+                if (result != null)
+                {
+
+                    FileInfo file = new(result.FullPath);
+                    if (file.Exists)
+                    {
+                        Imagen = result.FullPath;
+
+                        OnPropertyChanged(nameof(Imagen));
+                        string Base64 = ConvertirImagen.ConvertirABase64(result.FullPath);
+                        if (Actividad != null)
+                        {
+                            //Asignar imagen a la actividad
+                            Actividad.Imagen = Base64;
+                            //Actualizar
+                            OnPropertyChanged(nameof(Actividad));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejar excepciones según sea necesario
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+            await Task.CompletedTask;
+        }
     }
 }

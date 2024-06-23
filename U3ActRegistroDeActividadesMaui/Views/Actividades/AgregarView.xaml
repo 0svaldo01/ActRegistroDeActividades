@@ -14,38 +14,44 @@
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="Margin" Value="0,10"></Setter>
             </Style>
-            
-          
         </ResourceDictionary>
     </ContentPage.Resources>
+    
     <Frame Margin="10">
-        <VerticalStackLayout Background="White">
-            <Label Text="Agregar actividad" VerticalOptions="Center" HorizontalOptions="Center" 
-             FontSize="26" Margin="20"/>
-            <BoxView HeightRequest="1" Color="#277B3F" HorizontalOptions="FillAndExpand" Margin="0,0,0,40" />
-            <Label Text="Titulo de la actividad:"></Label>
-            <Frame BorderColor="Gray" Margin="0,5" Padding="0">
-                <Entry Margin="2" TextColor="Black" Background="White"></Entry>
-            </Frame>
-            <Label Text="Fecha de realización de la actividad:"></Label>
-            <Frame BorderColor="Gray" Margin="0,5" Padding="0">
-                <DatePicker TextColor="Black" Format="dd/MM/yyyy" ></DatePicker>
-            </Frame>
-            <!--<Frame>
-                <DatePicker x:Name="FechaCreacionPicker" Date="{x:Static system:DateTime.Now}" ></DatePicker>
-            </Frame>-->
-            <Label Text="Descripción de la actividad:"></Label>
-            <Frame BorderColor="Gray" Margin="0,5" Padding="0">
-                <Editor TextColor="Black" HeightRequest="150"></Editor>
-            </Frame>
-            <Label Text="Errores" Margin="0,0,0,20" TextColor="red" HorizontalOptions="Center"></Label>
-            <HorizontalStackLayout HorizontalOptions="Center">
-                <Button Command="{Binding CancelarCommand}" Margin="0,0,10,0" Text="Cancelar" BackgroundColor="Orange" TextColor="White" WidthRequest="150" />
-                <Button Command="{Binding AgregarCommand}" Text="Agregar" BackgroundColor="#52BC70" TextColor="White" WidthRequest="150" />
-            </HorizontalStackLayout>
+        <ScrollView>
+            <VerticalStackLayout Background="White">
+                <Label Text="Agregar actividad" VerticalOptions="Center" HorizontalOptions="Center" 
+                 FontSize="26" Margin="20"/>
+                <BoxView HeightRequest="1" Color="#277B3F" HorizontalOptions="FillAndExpand" Margin="0,0,0,40" />
+                <Label Text="Titulo de la actividad:"></Label>
+                <Frame BorderColor="Gray" Margin="0,5" Padding="0">
+                    <Entry Margin="2" Text="{Binding Actividad.Titulo}" TextColor="Black" Background="White"></Entry>
+                </Frame>
+                <Label Text="Fecha de realización de la actividad:"></Label>
+                <Frame BorderColor="Gray" Margin="0,5" Padding="0">
+                    <DatePicker TextColor="Black" Format="dd/MM/yyyy"></DatePicker>
+                </Frame>
+                <!--<Frame>
+                    <DatePicker x:Name="FechaCreacionPicker" Date="{x:Static system:DateTime.Now}" ></DatePicker>
+                </Frame>-->
+                <Label Text="Descripción de la actividad:"></Label>
+                <Frame BorderColor="Gray" Margin="0,5" Padding="0">
+                    <Editor TextColor="Black" Text="{Binding Actividad.Descripcion}" HeightRequest="150"></Editor>
+                </Frame>
+                <Label Text="{Binding Error}" Margin="0,0,0,20" TextColor="red" HorizontalOptions="Center"></Label>
+                <Label Text="Ruta de la imagen:"></Label>
+                <Frame BorderColor="Gray" Margin="0,5" Padding="0">
+                    <Button x:Name="BtnSeleccionarImagen" Text="Seleccionar Imagen" 
+                            Command="{Binding BuscarImagenCommand}"/>
+                </Frame>
+            
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Button Command="{Binding GuardarCommand}" Margin="0,0,10,0" Text="Cancelar" BackgroundColor="Orange" TextColor="White" WidthRequest="150" />
+                    <Button Command="{Binding AgregarCommand}" Text="Agregar" BackgroundColor="#52BC70" TextColor="White" WidthRequest="150" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
 
-
-        </VerticalStackLayout>
+        </ScrollView>
     </Frame>
    
 </ContentPage>
