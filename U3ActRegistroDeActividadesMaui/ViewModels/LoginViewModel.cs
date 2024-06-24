@@ -37,7 +37,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 }
                 else
                 {
-                    Error = "Usuario o contra incorrectos";
+                    Error = "usuario y/o contraseña incorrectos";
                 }
             }
         }

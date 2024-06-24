@@ -29,17 +29,14 @@
                 </Frame>
                 <Label Text="Fecha de realización de la actividad:"></Label>
                 <Frame BorderColor="Gray" Margin="0,5" Padding="0">
-                    <DatePicker TextColor="Black" Format="dd/MM/yyyy"></DatePicker>
+                    <DatePicker Date="{Binding Actividad.FechaCreacion}" TextColor="Black" Format="yyyy/MM/dd"></DatePicker>
                 </Frame>
-                <!--<Frame>
-                    <DatePicker x:Name="FechaCreacionPicker" Date="{x:Static system:DateTime.Now}" ></DatePicker>
-                </Frame>-->
                 <Label Text="Descripción de la actividad:"></Label>
                 <Frame BorderColor="Gray" Margin="0,5" Padding="0">
                     <Editor TextColor="Black" Text="{Binding Actividad.Descripcion}" HeightRequest="150"></Editor>
                 </Frame>
                 <Label Text="{Binding Error}" Margin="0,0,0,20" TextColor="red" HorizontalOptions="Center"></Label>
-                <Label Text="Ruta de la imagen:"></Label>
+                <Label Text="Selecciona una imagen:"></Label>
                 <Frame BorderColor="Gray" Margin="0,5" Padding="0">
                     <Button x:Name="BtnSeleccionarImagen" Text="Seleccionar Imagen" 
                             Command="{Binding BuscarImagenCommand}"/>

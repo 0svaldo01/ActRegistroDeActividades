@@ -8,6 +8,7 @@ using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 using U3ActRegistroDeActividadesMaui.Models.Validators;
 using U3ActRegistroDeActividadesMaui.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace U3ActRegistroDeActividadesMaui.ViewModels
 {
@@ -84,6 +85,15 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             }
             return null!;
         }
+        #region Vistas
+        [RelayCommand]
+        public async Task VerActividadesView()
+        {
+            Error = "";
+            await Shell.Current.GoToAsync("//EditarAct");
+            await CargarActividades();
+        }
+        
         [RelayCommand]
         public async Task Cancelar()
         {
@@ -91,6 +101,8 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             await Shell.Current.GoToAsync("//ListaAct");
             await CargarActividades();
         }
+        #endregion
+
         [RelayCommand]
         public async Task Agregar()
         {
@@ -112,6 +124,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                         int id = int.Parse(idtoken.ToString() ?? "0");
                         //Asignar id
                         Actividad.IdDepartamento = id;
+                        Actividad.FechaCreacion = Actividad.FechaCreacion;
                         Actividad.FechaActualizacion = DateTime.UtcNow;
 
                         //si existe
@@ -134,6 +147,7 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                     {
                         Error = string.Join("\n", resultado.Errors.Select(x => x.ErrorMessage));
                     }
+                    await CargarActividades();
                 }
             }
             catch (Exception ex)
@@ -256,4 +270,5 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             await Task.CompletedTask;
         }
     }
+
 }
