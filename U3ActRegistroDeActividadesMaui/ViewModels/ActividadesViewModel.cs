@@ -7,6 +7,7 @@ using U3ActRegistroDeActividadesMaui.Helpers;
 using U3ActRegistroDeActividadesMaui.Models.DTOs;
 using U3ActRegistroDeActividadesMaui.Models.Entities;
 using U3ActRegistroDeActividadesMaui.Models.Validators;
+using U3ActRegistroDeActividadesMaui.Repositories;
 using U3ActRegistroDeActividadesMaui.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -14,17 +15,27 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
 {
     public partial class ActividadesViewModel : ObservableObject
     {
-        public ObservableCollection<Actividades> Actividades { get; set; } = [];
+        public ObservableCollection<Actividades> ListaActividades { get; set; } = [];
         private readonly ActividadesService service = new();
         private readonly ActividadDTOValidator validador = new();
         private readonly ActividadesService actividadesService;
         public string Imagen = "";
+
+        private readonly ActividadesRepository actividadesRepository = new ActividadesRepository();
+
+        [ObservableProperty]
+        private ActividadDTO actividad = new ActividadDTO();
+
+        [ObservableProperty]
+        private string error = "";
+       
         public ActividadesViewModel()
         {
             var service = IPlatformApplication.Current.Services.GetService<ActividadesService>() ?? new();
             this.actividadesService = service;
+            this.actividadesRepository = new ActividadesRepository();
 
-            Actividades.Clear();
+            ListaActividades.Clear();
             if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
             {
                 _ = CargarActividades();
@@ -35,29 +46,26 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
                 var acts = ActividadesSerializerHelper.Deserializar();
                 foreach (var item in acts)
                 {
-                    Actividades.Add(item);
+                    ListaActividades.Add(item);
                 }
             }
         }
         async Task CargarActividades()
         {
-            Actividades.Clear();
+            ListaActividades.Clear();
             var acts = await actividadesService.GetAllRight();
             if (acts != null)
             {
                 foreach (var item in acts)
                 {
-                    Actividades.Add(item);
+                    ListaActividades.Add(item);
                 }
                 //Serializar aqui
-                ActividadesSerializerHelper.Serializar(Actividades);
+                ActividadesSerializerHelper.Serializar(ListaActividades);
             }
             await Task.CompletedTask;
         }
-        [ObservableProperty]
-        private ActividadDTO? actividad = new();
-        [ObservableProperty]
-        private string error = "";
+
         [RelayCommand]
         public async Task VerListaDeDepartamentos()
         {
@@ -93,7 +101,36 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             await Shell.Current.GoToAsync("//EditarAct");
             await CargarActividades();
         }
-        
+        public void CargarDatos(int id)
+        {
+            var activ = actividadesRepository.Get(id);
+            if (activ != null)
+            {
+                Actividad = new ActividadDTO
+                {
+                    Id = activ.Id,
+                    Titulo = activ.Titulo,
+                    Descripcion = activ.Descripcion,
+                    Imagen = activ.Imagen.ToString(),
+                    FechaCreacion = activ.FechaCreacion,
+                    FechaActualizacion = activ.FechaActualizacion,
+                    Estado = activ.Estado,
+                    IdDepartamento = activ.IdDepartamento
+                };
+            }
+        }
+
+
+        [RelayCommand]
+        public async Task VerEditarAct(int id)
+        {
+            Error = "";
+
+            CargarDatos(id);
+            await Shell.Current.GoToAsync("//EditarAct");
+        }
+
+
         [RelayCommand]
         public async Task Cancelar()
         {
@@ -269,6 +306,29 @@ namespace U3ActRegistroDeActividadesMaui.ViewModels
             }
             await Task.CompletedTask;
         }
+
+        //[RelayCommand]
+        //public async Task EliminarActividad()
+        //{
+        //    var answer = await Shell.Current.DisplayAlert("Eliminar actividad", "¿Estás seguro de que quieres eliminar la actividad?", "Sí", "No");
+        //    if (answer)
+        //    {
+        //        try
+        //        {
+        //            if (actividad != null)
+        //            {
+        //                await actividadesService.Delete(actividad);
+        //                // Aquí deberías eliminar el objeto Actividades de la colección Actividades
+        //                ListaActividades.Remove(actividad); // Esto debe ser revisado
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            await Shell.Current.DisplayAlert("Error", $"Error eliminando la actividad: {ex.Message}", "Aceptar");
+        //        }
+        //    }
+        //}
+
     }
 
 }

@@ -28,14 +28,15 @@
                 HorizontalOptions="End" Command="{Binding VerAgregarActividadCommand}"/>
         </HorizontalStackLayout>
         <ScrollView Grid.Row="1">
-            <CollectionView ItemsSource="{Binding Actividades}" EmptyView="No hay nada">
+            <CollectionView ItemsSource="{Binding ListaActividades}" EmptyView="No hay nada">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <SwipeView>
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Editar" BackgroundColor="LightGreen"  Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActividadesViewModel}}, Path=VerEditarDepartamentoCommand}" CommandParameter="{Binding .}" />
-                                    <SwipeItem Text="Eliminar" BackgroundColor="LightPink" />
+                                    <SwipeItem Text="Editar" BackgroundColor="LightGreen"  Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActividadesViewModel}}, Path=VerEditarActCommand}" CommandParameter="{Binding id}" />
+                                    <SwipeItem Text="Eliminar" BackgroundColor="LightPink" Command="{Binding EliminarActividadCommand}"
+                                       CommandParameter="{Binding SelectedActividad}"/>
                                 </SwipeItems>
                             </SwipeView.RightItems>
                             <Frame>
